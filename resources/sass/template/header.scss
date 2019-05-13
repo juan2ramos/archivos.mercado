@@ -1,0 +1,17 @@
+.Header {
+  background: white;
+  height: 6rem;
+  padding: 0 1rem;
+  @include respond-to(medium) {
+    padding: 0 4rem;
+    height: 10rem;
+  }
+
+  h1 {
+    display: none;
+    @include respond-to(medium) {
+      display: block;
+    }
+  }
+}
+

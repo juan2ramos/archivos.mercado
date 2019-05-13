@@ -1,0 +1,122 @@
+.Nav {
+  background: var(--primary-color);
+  min-height: 100vh;
+  max-width: 22rem;
+  width: 22rem;
+  position: fixed;
+  top: 0;
+  left: -22rem;
+  box-shadow: 1px 0 10px 0 rgba(0, 0, 0, 0.03);
+  transition: transform .5s;
+  will-change: transform;
+
+  &.open {
+    transform: translateX(22rem);
+    @include respond-to(medium) {
+      transform: translateX(0);
+    }
+  }
+
+  @include respond-to(medium) {
+    position: relative;
+    width: 6.2rem;
+    left: 0;
+  }
+  @include respond-to(large) {
+    width: 22rem;
+  }
+
+  &-logo {
+    background: white;
+    height: 10rem;
+
+    &Small {
+      display: none;
+      @include respond-to(medium) {
+        display: flex;
+      }
+      @include respond-to(large) {
+        display: none;
+      }
+    }
+
+    &Large {
+      @include respond-to(medium) {
+        display: none;
+      }
+      @include respond-to(large) {
+        display: flex;
+      }
+    }
+
+    svg {
+      display: flex;
+    }
+  }
+
+  &-headerLogo {
+    @include respond-to(medium) {
+      display: none;
+    }
+  }
+
+  &-button span {
+    background: #94979B;
+    height: 0.2rem;
+    width: 2rem;
+    display: block;
+
+    &:nth-child(2) {
+      width: 1.4rem;
+      margin: 0.4rem 0;
+    }
+  }
+
+  &-logoutLarge {
+    display: none;
+    @include respond-to(medium) {
+      display: block;
+    }
+  }
+
+  &-logoutSmall {
+    @include respond-to(medium) {
+      display: none;
+    }
+  }
+
+  &-buttonClose {
+    cursor: pointer;
+    @include respond-to(medium) {
+      display: none !important;
+    }
+  }
+}
+
+.NavAdmin-ul {
+  height: calc(100vh - 220px);
+
+  svg {
+    margin-right: 2rem;
+    @include respond-to(medium){
+      margin-right: 0;
+    }
+    @include respond-to(large){
+      margin-right: 2rem;
+    }
+  }
+  span{
+
+    @include respond-to(medium){
+      display: none;
+    }
+    @include respond-to(large){
+      display: block;
+    }
+  }
+
+  a {
+    margin: 4rem auto;
+    display: block;
+  }
+}

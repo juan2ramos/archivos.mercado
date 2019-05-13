@@ -1,0 +1,46 @@
+
+.login {
+  background: url("../images/home.png");
+  background-size: cover;
+
+  &-content {
+    height: 100vh;
+    max-width: 96%;
+    margin: 0 auto;
+    width: 100%;
+    @include respond-to(medium) {
+      margin: 0 0 0 10rem;
+      max-width: 36rem;
+    }
+  }
+
+  &-logo {
+    @include respond-to(medium) {
+      display: none;
+    }
+  }
+
+  input {
+    border: none !important;
+    border-radius: .4rem;
+    margin: 1rem 0;
+  }
+
+  p {
+    color: white;
+    line-height: 2rem;
+    font-weight: 100;
+
+    &.error {
+      color: var(--error-color);
+    }
+  }
+
+  button {
+    background: var(--secondary-color);
+    color: black;
+    font-weight: 700;
+    border-radius: .4rem;
+    max-height: 4rem;
+  }
+}

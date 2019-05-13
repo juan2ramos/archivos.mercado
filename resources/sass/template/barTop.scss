@@ -1,0 +1,42 @@
+.BarTop {
+  background: var(--darkGreen-color);
+
+  &-link {
+    color: #232323;
+    padding: 1rem 3rem;
+    background: var(--primary-color);
+    font-weight: 600;
+    margin: 1rem 0 0;
+    @include respond-to(medium) {
+      margin: 0 0 0 3rem;
+    }
+  }
+
+  &-span {
+    margin-left: 3rem;
+  }
+
+  &-form {
+    position: relative;
+    width: 30rem;
+    max-width: 80%;
+    margin: 1rem 0;
+    @include respond-to(medium) {
+      margin: 0 3rem 0 0;
+    }
+  }
+
+  &-button {
+    position: absolute;
+    background: rgba(0, 0, 0, 0);
+    min-width: 2rem;
+    right: 0;
+    max-height: 100%;
+    top: -.4rem;
+  }
+
+  &-input {
+    max-height: 3.4rem;
+    border-radius: 0 !important;
+  }
+}

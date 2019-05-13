@@ -1,0 +1,30 @@
+@import "~inuit-css";
+
+:root {
+  --primary-color: #a4c49a  ;
+  --secondary-color: #FAA41B;
+  --darkGreen-color: #778e70;
+  --link-color: white;
+  --fontPrimary--color: #52575A;
+  --lightGrey-color: #94979B;
+  --darkGrey-color: #37542f;
+  --dark-color: #000;
+  --active-color: #3A84FF;
+  --grid-maxWidth: 1024px;
+}
+
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == "small" {
+    @media (min-width: 420px) {
+      @content
+    }
+  } @else if $breakpoint == "medium" {
+    @media (min-width: 720px) {
+      @content
+    }
+  } @else if $breakpoint == "large" {
+    @media (min-width: 1280px) {
+      @content
+    }
+  }
+}
