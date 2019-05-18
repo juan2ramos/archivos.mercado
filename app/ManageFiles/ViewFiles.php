@@ -5,6 +5,7 @@ namespace App\ManageFiles;
 
 
 use App\Models\Client;
+use App\Models\File;
 use Illuminate\Support\Facades\Storage;
 
 class ViewFiles
@@ -19,7 +20,8 @@ class ViewFiles
         $this->root = $this->getRootFile($this->client->nit);
         $this->routeFiles = request()->get('route_files');
         $this->getFiles();
-        return $this->getDirectories();
+
+        return $this->getDirectories()->concat($this->getFiles());
 
     }
 
@@ -32,6 +34,8 @@ class ViewFiles
                 'name' => end($match),
                 'path' => $item,
                 'type' => 'directory',
+                'date' => '',
+                'category' => '',
             ];
         });
         return $directories;
@@ -39,13 +43,25 @@ class ViewFiles
 
     private function getFiles()
     {
-        $client = $this->client->load('files');
-        return $client->files;
+        $files = File::where('directory', $this->getPath())->get();
+
+        $files = $files->map(function ($item) {
+            return [
+                'name' => $item->name,
+                'path' => Storage::temporaryUrl($item->path, now()->addMinutes(30)),
+                'type' => $item->extension,
+                'date' => $item->month . ' ' . $item->year,
+                'category' => $item->category->name,
+            ];
+        });
+
+        return $files;
     }
 
     private function getPath()
     {
-        return $this->root . '/' . $this->routeFiles;
+        $routeFiles = ($this->routeFiles) ? '/' . $this->routeFiles : '';
+        return $this->root . $routeFiles;
     }
 
 
@@ -57,11 +73,12 @@ class ViewFiles
             $root . '/' . $nit);
     }
 
-    public function directories($nit){
+    public function directories($nit)
+    {
 
         $directoriesPath = $this->getRootFile($nit);
         $directories = collect(Storage::allDirectories($directoriesPath));
-        $directories->prepend($this->getRootFile().$nit);
+        $directories->prepend($this->getRootFile() . $nit);
 
         return $directories;
     }

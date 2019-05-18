@@ -1765,6 +1765,10 @@ module.exports = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sweetalert__WEBPACK_IMPORTED_MODULE_1__);
+//
+//
 //
 //
 //
@@ -1842,6 +1846,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'CategoriesTable',
   props: ['categories', 'token'],
@@ -1849,15 +1854,17 @@ __webpack_require__.r(__webpack_exports__);
     return {
       name: '',
       disabled: false,
-      categoriesLocal: {}
+      categoriesLocal: []
     };
   },
   mounted: function mounted() {
-    this.categoriesLocal = Object.assign({}, this.categoriesLocal, this.categories.map(function (item) {
+    this.categoriesLocal = Object.assign([], this.categoriesLocal, this.categories.map(function (item) {
       return {
         'id': item.id,
         'name': item.name,
-        'editing': false
+        'nameBack': item.name,
+        'editing': false,
+        'updating': false
       };
     }));
   },
@@ -1872,10 +1879,20 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         _this.disabled = false;
 
-        _this.categoriesLocal.push(response.data);
+        _this.categoriesLocal.push({
+          'id': response.data.id,
+          'name': response.data.name,
+          'nameBack': response.data.name,
+          'editing': false,
+          'updating': false
+        });
 
+        sweetalert__WEBPACK_IMPORTED_MODULE_1___default()("Categoria ha sido  creada", {
+          icon: "success"
+        });
         _this.name = '';
       })["catch"](function (error) {
+        console.log(error);
         _this.disabled = false;
 
         if (error.response.status === 422) {
@@ -1885,13 +1902,61 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     editCategory: function editCategory(category) {
+      category.nameBack = category.name;
       category.editing = true;
     },
     editCategoryCancel: function editCategoryCancel(category) {
+      category.name = category.nameBack;
       category.editing = false;
     },
     updateCategory: function updateCategory(category) {
-      category.editing = false;
+      var _this2 = this;
+
+      category.updating = true;
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.put("/admin/categorias/".concat(category.id), {
+        '_token': this.token,
+        'name': category.name
+      }).then(function (response) {
+        category.editing = false;
+        category.name = response.data.name;
+        category.updating = false;
+      })["catch"](function (error) {
+        _this2.disabled = false;
+
+        if (error.response.status === 422) {
+          _this2.errors = error.response.data;
+          category.name = category.nameBack;
+          category.editing = false;
+        }
+      });
+    },
+    deleteCategory: function deleteCategory(category, index) {
+      var _this3 = this;
+
+      sweetalert__WEBPACK_IMPORTED_MODULE_1___default()({
+        title: "Estas seguro ?",
+        text: "Recuerda que se ya no prodrás recuper la información.",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+      }).then(function (willDelete) {
+        if (willDelete) {
+          axios__WEBPACK_IMPORTED_MODULE_0___default.a["delete"]("/admin/categorias/".concat(category.id)).then(function (response) {
+            if (response.data.success) {
+              _this3.categoriesLocal.splice(index, 1);
+
+              sweetalert__WEBPACK_IMPORTED_MODULE_1___default()("Categoria ha sido  eliminada", {
+                icon: "success"
+              });
+              return;
+            }
+
+            sweetalert__WEBPACK_IMPORTED_MODULE_1___default()("Hubo un error! Vuelve a intentarlo", {
+              icon: "error"
+            });
+          });
+        }
+      });
     }
   }
 });
@@ -2200,7 +2265,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.disabled = true;
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/admin/archivos/', {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/admin/directorios/', {
         '_token': this.token,
         'name': this.name,
         'path': this.client.nit + '/' + this.routeFiles
@@ -2222,6 +2287,16 @@ __webpack_require__.r(__webpack_exports__);
           console.log(_this.errors);
         }
       });
+    },
+    typeFile: function typeFile(type) {
+      var types = {
+        png: 'iconimagen.svg',
+        jpg: 'iconimagen.svg',
+        jpeg: 'iconimagen.svg',
+        pdf: 'iconpdf.svg',
+        rar: 'iconrar.svg'
+      };
+      return '/images/' + types[type];
     }
   }
 });
@@ -2300,12 +2375,10 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
-/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sweetalert__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _Services_uploadFiles__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Services/uploadFiles */ "./resources/js/Services/uploadFiles.js");
-/* harmony import */ var _Services_dates__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Services/dates */ "./resources/js/Services/dates.js");
+/* harmony import */ var _Services_dates__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Services/dates */ "./resources/js/Services/dates.js");
+/* harmony import */ var _Services_uploadFiles__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Services/uploadFiles */ "./resources/js/Services/uploadFiles.js");
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(sweetalert__WEBPACK_IMPORTED_MODULE_2__);
 //
 //
 //
@@ -2352,21 +2425,55 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'UploadFile',
-  props: ['categories', 'directories'],
+  props: ['categories', 'directories', 'token', 'client'],
   data: function data() {
     return {
-      years: Object(_Services_dates__WEBPACK_IMPORTED_MODULE_3__["getYears"])(),
-      months: Object(_Services_dates__WEBPACK_IMPORTED_MODULE_3__["getMounths"])()
+      years: Object(_Services_dates__WEBPACK_IMPORTED_MODULE_0__["getYears"])(),
+      months: Object(_Services_dates__WEBPACK_IMPORTED_MODULE_0__["getMounths"])(),
+      dropZone: {},
+      disabledButton: false,
+      name: '',
+      path: '',
+      extension: '',
+      mime: ''
     };
   },
   mounted: function mounted() {
-    Object(_Services_uploadFiles__WEBPACK_IMPORTED_MODULE_2__["default"])();
+    var _this = this;
+
+    this.dropZone = Object(_Services_uploadFiles__WEBPACK_IMPORTED_MODULE_1__["default"])(this.token);
+    this.dropZone.on("addedfile", function () {
+      return _this.disabledButton = true;
+    });
+    this.dropZone.on("success", function (file, response) {
+      _this.disabledButton = false;
+      _this.path = response.path;
+      _this.extension = response.extension;
+      _this.mime = response.mime;
+      _this.name = response.name;
+    });
+    this.dropZone.on("maxfilesexceeded", function (file) {
+      _this.dropZone.removeFile(file);
+
+      sweetalert__WEBPACK_IMPORTED_MODULE_2___default()("Solo se permite un archivo", {
+        icon: "warning"
+      });
+      _this.disabledButton = false;
+    }); //this.dropZone.on('removedfile', (file) => destroyFile(file.id_number));
   },
   methods: {}
 });
@@ -7089,12 +7196,72 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "table-container m-t-36" }, [
+    _c(
+      "form",
+      {
+        staticClass: "Form m-b-60",
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+            return _vm.createFile()
+          }
+        }
+      },
+      [
+        _c("h3", [_vm._v("Crear categoria ")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "row middle-items m-t-12" }, [
+          _c(
+            "label",
+            {
+              staticClass: "col-5 is-text-center",
+              attrs: { for: "name-folder" }
+            },
+            [_vm._v("Nombre de la categoria")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-7" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.name,
+                  expression: "name"
+                }
+              ],
+              attrs: {
+                name: "name",
+                id: "name-folder",
+                placeholder: "Ingrese el nombre de la categoria"
+              },
+              domProps: { value: _vm.name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.name = $event.target.value
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            { staticClass: "col", attrs: { disabled: _vm.disabled } },
+            [_vm._v("Crear")]
+          )
+        ])
+      ]
+    ),
+    _vm._v(" "),
     _c("table", [
       _vm._m(0),
       _vm._v(" "),
       _c(
         "tbody",
-        _vm._l(_vm.categoriesLocal, function(category) {
+        _vm._l(_vm.categoriesLocal, function(category, index) {
           return _c("tr", [
             _c("td", [
               _c(
@@ -7123,7 +7290,13 @@ var render = function() {
                       expression: "category.editing"
                     }
                   ],
-                  staticClass: "row middle-items  FormEdit"
+                  staticClass: "row middle-items  FormEdit",
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.updateCategory(category)
+                    }
+                  }
                 },
                 [
                   _c("input", {
@@ -7152,7 +7325,10 @@ var render = function() {
                     _c(
                       "a",
                       {
-                        staticClass: "FormEdit-link",
+                        class: [
+                          category.updating ? "disabled" : "",
+                          "FormEdit-link"
+                        ],
                         on: {
                           click: function($event) {
                             $event.preventDefault()
@@ -7172,7 +7348,7 @@ var render = function() {
                         on: {
                           click: function($event) {
                             $event.preventDefault()
-                            return _vm.updateCategory(category)
+                            return _vm.editCategoryCancel(category)
                           }
                         }
                       },
@@ -7262,168 +7438,122 @@ var render = function() {
                 ]
               ),
               _vm._v(" "),
-              _c("a", { attrs: { href: "" } }, [
-                _c(
-                  "svg",
-                  {
-                    attrs: {
-                      width: "22px",
-                      height: "26px",
-                      viewBox: "0 0 22 26",
-                      version: "1.1",
-                      xmlns: "http://www.w3.org/2000/svg",
-                      "xmlns:xlink": "http://www.w3.org/1999/xlink"
+              _c(
+                "a",
+                {
+                  attrs: { href: "" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.deleteCategory(category, index)
                     }
-                  },
-                  [
-                    _c(
-                      "g",
-                      {
-                        attrs: {
-                          id: "Page-1",
-                          stroke: "none",
-                          "stroke-width": "1",
-                          fill: "none",
-                          "fill-rule": "evenodd"
-                        }
-                      },
-                      [
-                        _c(
-                          "g",
-                          {
-                            attrs: {
-                              id: "Artboard",
-                              transform: "translate(-201.000000, -154.000000)",
-                              fill: "#444242"
-                            }
-                          },
-                          [
-                            _c(
-                              "g",
-                              {
-                                attrs: {
-                                  id: "iconeliminar",
-                                  transform: "translate(201.000000, 154.000000)"
-                                }
-                              },
-                              [
-                                _c("path", {
+                  }
+                },
+                [
+                  _c(
+                    "svg",
+                    {
+                      attrs: {
+                        width: "22px",
+                        height: "26px",
+                        viewBox: "0 0 22 26",
+                        version: "1.1",
+                        xmlns: "http://www.w3.org/2000/svg",
+                        "xmlns:xlink": "http://www.w3.org/1999/xlink"
+                      }
+                    },
+                    [
+                      _c(
+                        "g",
+                        {
+                          attrs: {
+                            id: "Page-1",
+                            stroke: "none",
+                            "stroke-width": "1",
+                            fill: "none",
+                            "fill-rule": "evenodd"
+                          }
+                        },
+                        [
+                          _c(
+                            "g",
+                            {
+                              attrs: {
+                                id: "Artboard",
+                                transform:
+                                  "translate(-201.000000, -154.000000)",
+                                fill: "#444242"
+                              }
+                            },
+                            [
+                              _c(
+                                "g",
+                                {
                                   attrs: {
-                                    d:
-                                      "M20.085,2.925 L15.275,2.925 L15.275,1.43 C15.275,0.65 14.625,0 13.845,0 L8.45,0 C7.67,0 7.02,0.65 7.02,1.43 L7.02,2.925 L2.015,2.925 C1.04,2.925 0.26,3.705 0.26,4.68 C0.26,5.655 1.04,6.435 2.015,6.435 L2.47,6.435 L3.315,23.335 C3.38,24.83 4.615,26 6.11,26 L16.12,26 C17.615,26 18.85,24.83 18.915,23.335 L19.76,6.435 L20.085,6.435 C21.06,6.435 21.84,5.655 21.84,4.68 C21.84,3.705 21.06,2.925 20.085,2.925 Z M7.995,1.43 C7.995,1.17 8.19,0.975 8.45,0.975 L13.845,0.975 C14.105,0.975 14.3,1.17 14.3,1.43 L14.3,2.925 L8.06,2.925 L8.06,1.43 L7.995,1.43 Z M17.875,23.27 C17.81,24.245 17.03,24.96 16.12,24.96 L6.11,24.96 C5.135,24.96 4.42,24.245 4.355,23.27 L3.51,6.435 L18.72,6.435 L17.875,23.27 Z M20.085,5.395 L2.015,5.395 C1.625,5.395 1.3,5.07 1.3,4.68 C1.3,4.29 1.625,3.9 2.015,3.9 L20.02,3.9 C20.475,3.9 20.8,4.29 20.8,4.68 C20.8,5.07 20.475,5.395 20.085,5.395 Z",
-                                    id: "Shape",
-                                    "fill-rule": "nonzero"
+                                    id: "iconeliminar",
+                                    transform:
+                                      "translate(201.000000, 154.000000)"
                                   }
-                                }),
-                                _vm._v(" "),
-                                _c("path", {
-                                  attrs: {
-                                    d:
-                                      "M11.05,22.945 C11.83,22.945 12.415,22.36 12.415,21.58 L12.415,15.535 C12.415,15.275 12.22,15.015 11.895,15.015 C11.635,15.015 11.375,15.21 11.375,15.535 L11.375,21.58 C11.375,21.775 11.245,21.905 11.05,21.905 C10.855,21.905 10.66,21.775 10.66,21.58 L10.66,9.36 C10.66,9.165 10.79,9.035 11.05,9.035 C11.31,9.035 11.375,9.165 11.375,9.36 L11.375,11.505 C11.375,11.765 11.635,12.025 11.895,12.025 C12.155,12.025 12.415,11.83 12.415,11.505 L12.415,9.36 C12.415,8.58 11.83,7.995 11.05,7.995 C10.27,7.995 9.685,8.58 9.685,9.36 L9.685,21.58 C9.685,22.36 10.27,22.945 11.05,22.945 Z",
-                                    id: "Path"
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("path", {
-                                  attrs: {
-                                    d:
-                                      "M5.395,20.995 C5.395,21.385 5.59,21.71 5.85,21.97 C6.11,22.23 6.435,22.295 6.76,22.295 C6.76,22.295 6.825,22.295 6.825,22.295 C7.215,22.295 7.54,22.1 7.8,21.84 C8.06,21.58 8.19,21.19 8.125,20.865 L7.605,10.4 C7.605,10.01 7.41,9.685 7.15,9.425 C6.89,9.165 6.5,9.1 6.175,9.1 C5.395,9.165 4.81,9.815 4.875,10.53 L5.395,20.995 Z M6.24,10.14 C6.24,10.14 6.24,10.14 6.24,10.14 C6.37,10.14 6.435,10.14 6.5,10.205 C6.565,10.27 6.63,10.335 6.63,10.465 L7.15,20.93 C7.15,20.995 7.15,21.125 7.085,21.19 C7.02,21.255 6.955,21.32 6.825,21.32 C6.76,21.32 6.63,21.32 6.565,21.255 C6.5,21.19 6.435,21.125 6.435,20.995 L5.85,10.53 C5.85,10.335 6.045,10.14 6.24,10.14 Z",
-                                    id: "Shape",
-                                    "fill-rule": "nonzero"
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("path", {
-                                  attrs: {
-                                    d:
-                                      "M15.275,22.295 C15.275,22.295 15.34,22.295 15.34,22.295 C16.055,22.295 16.705,21.71 16.705,20.995 L17.225,10.53 C17.225,10.14 17.095,9.815 16.9,9.555 C16.64,9.295 16.315,9.1 15.925,9.1 C15.535,9.1 15.21,9.23 14.95,9.425 C14.69,9.685 14.495,10.01 14.495,10.4 L13.975,20.865 C13.91,21.645 14.495,22.295 15.275,22.295 Z M14.95,20.93 L15.47,10.465 C15.47,10.4 15.535,10.27 15.6,10.205 C15.665,10.14 15.73,10.14 15.86,10.14 C15.86,10.14 15.86,10.14 15.86,10.14 C15.925,10.14 16.055,10.205 16.12,10.27 C16.185,10.335 16.185,10.4 16.185,10.53 L15.665,20.995 C15.665,21.19 15.47,21.32 15.275,21.32 C15.08,21.32 14.95,21.125 14.95,20.93 Z",
-                                    id: "Shape",
-                                    "fill-rule": "nonzero"
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("path", {
-                                  attrs: {
-                                    d:
-                                      "M11.895,13 C11.635,13 11.375,13.26 11.375,13.52 C11.375,13.78 11.635,14.04 11.895,14.04 C12.155,14.04 12.415,13.845 12.415,13.52 C12.415,13.26 12.22,13 11.895,13 Z",
-                                    id: "Path"
-                                  }
-                                })
-                              ]
-                            )
-                          ]
-                        )
-                      ]
-                    )
-                  ]
-                )
-              ])
+                                },
+                                [
+                                  _c("path", {
+                                    attrs: {
+                                      d:
+                                        "M20.085,2.925 L15.275,2.925 L15.275,1.43 C15.275,0.65 14.625,0 13.845,0 L8.45,0 C7.67,0 7.02,0.65 7.02,1.43 L7.02,2.925 L2.015,2.925 C1.04,2.925 0.26,3.705 0.26,4.68 C0.26,5.655 1.04,6.435 2.015,6.435 L2.47,6.435 L3.315,23.335 C3.38,24.83 4.615,26 6.11,26 L16.12,26 C17.615,26 18.85,24.83 18.915,23.335 L19.76,6.435 L20.085,6.435 C21.06,6.435 21.84,5.655 21.84,4.68 C21.84,3.705 21.06,2.925 20.085,2.925 Z M7.995,1.43 C7.995,1.17 8.19,0.975 8.45,0.975 L13.845,0.975 C14.105,0.975 14.3,1.17 14.3,1.43 L14.3,2.925 L8.06,2.925 L8.06,1.43 L7.995,1.43 Z M17.875,23.27 C17.81,24.245 17.03,24.96 16.12,24.96 L6.11,24.96 C5.135,24.96 4.42,24.245 4.355,23.27 L3.51,6.435 L18.72,6.435 L17.875,23.27 Z M20.085,5.395 L2.015,5.395 C1.625,5.395 1.3,5.07 1.3,4.68 C1.3,4.29 1.625,3.9 2.015,3.9 L20.02,3.9 C20.475,3.9 20.8,4.29 20.8,4.68 C20.8,5.07 20.475,5.395 20.085,5.395 Z",
+                                      id: "Shape",
+                                      "fill-rule": "nonzero"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("path", {
+                                    attrs: {
+                                      d:
+                                        "M11.05,22.945 C11.83,22.945 12.415,22.36 12.415,21.58 L12.415,15.535 C12.415,15.275 12.22,15.015 11.895,15.015 C11.635,15.015 11.375,15.21 11.375,15.535 L11.375,21.58 C11.375,21.775 11.245,21.905 11.05,21.905 C10.855,21.905 10.66,21.775 10.66,21.58 L10.66,9.36 C10.66,9.165 10.79,9.035 11.05,9.035 C11.31,9.035 11.375,9.165 11.375,9.36 L11.375,11.505 C11.375,11.765 11.635,12.025 11.895,12.025 C12.155,12.025 12.415,11.83 12.415,11.505 L12.415,9.36 C12.415,8.58 11.83,7.995 11.05,7.995 C10.27,7.995 9.685,8.58 9.685,9.36 L9.685,21.58 C9.685,22.36 10.27,22.945 11.05,22.945 Z",
+                                      id: "Path"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("path", {
+                                    attrs: {
+                                      d:
+                                        "M5.395,20.995 C5.395,21.385 5.59,21.71 5.85,21.97 C6.11,22.23 6.435,22.295 6.76,22.295 C6.76,22.295 6.825,22.295 6.825,22.295 C7.215,22.295 7.54,22.1 7.8,21.84 C8.06,21.58 8.19,21.19 8.125,20.865 L7.605,10.4 C7.605,10.01 7.41,9.685 7.15,9.425 C6.89,9.165 6.5,9.1 6.175,9.1 C5.395,9.165 4.81,9.815 4.875,10.53 L5.395,20.995 Z M6.24,10.14 C6.24,10.14 6.24,10.14 6.24,10.14 C6.37,10.14 6.435,10.14 6.5,10.205 C6.565,10.27 6.63,10.335 6.63,10.465 L7.15,20.93 C7.15,20.995 7.15,21.125 7.085,21.19 C7.02,21.255 6.955,21.32 6.825,21.32 C6.76,21.32 6.63,21.32 6.565,21.255 C6.5,21.19 6.435,21.125 6.435,20.995 L5.85,10.53 C5.85,10.335 6.045,10.14 6.24,10.14 Z",
+                                      id: "Shape",
+                                      "fill-rule": "nonzero"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("path", {
+                                    attrs: {
+                                      d:
+                                        "M15.275,22.295 C15.275,22.295 15.34,22.295 15.34,22.295 C16.055,22.295 16.705,21.71 16.705,20.995 L17.225,10.53 C17.225,10.14 17.095,9.815 16.9,9.555 C16.64,9.295 16.315,9.1 15.925,9.1 C15.535,9.1 15.21,9.23 14.95,9.425 C14.69,9.685 14.495,10.01 14.495,10.4 L13.975,20.865 C13.91,21.645 14.495,22.295 15.275,22.295 Z M14.95,20.93 L15.47,10.465 C15.47,10.4 15.535,10.27 15.6,10.205 C15.665,10.14 15.73,10.14 15.86,10.14 C15.86,10.14 15.86,10.14 15.86,10.14 C15.925,10.14 16.055,10.205 16.12,10.27 C16.185,10.335 16.185,10.4 16.185,10.53 L15.665,20.995 C15.665,21.19 15.47,21.32 15.275,21.32 C15.08,21.32 14.95,21.125 14.95,20.93 Z",
+                                      id: "Shape",
+                                      "fill-rule": "nonzero"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("path", {
+                                    attrs: {
+                                      d:
+                                        "M11.895,13 C11.635,13 11.375,13.26 11.375,13.52 C11.375,13.78 11.635,14.04 11.895,14.04 C12.155,14.04 12.415,13.845 12.415,13.52 C12.415,13.26 12.22,13 11.895,13 Z",
+                                      id: "Path"
+                                    }
+                                  })
+                                ]
+                              )
+                            ]
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                ]
+              )
             ])
           ])
         }),
         0
       )
-    ]),
-    _vm._v(" "),
-    _c(
-      "form",
-      {
-        staticClass: "Form m-t-60",
-        on: {
-          submit: function($event) {
-            $event.preventDefault()
-            return _vm.createFile()
-          }
-        }
-      },
-      [
-        _c("h3", [_vm._v("Crear categoria ")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "row middle-items m-t-12" }, [
-          _c(
-            "label",
-            {
-              staticClass: "col-5 is-text-center",
-              attrs: { for: "name-folder" }
-            },
-            [_vm._v("Nombre de la categoria")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-7" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.name,
-                  expression: "name"
-                }
-              ],
-              attrs: {
-                name: "name",
-                id: "name-folder",
-                placeholder: "Ingrese el nombre de la categoria"
-              },
-              domProps: { value: _vm.name },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.name = $event.target.value
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c(
-            "button",
-            { staticClass: "col", attrs: { disabled: _vm.disabled } },
-            [_vm._v("Crear")]
-          )
-        ])
-      ]
-    )
+    ])
   ])
 }
 var staticRenderFns = [
@@ -7826,7 +7956,7 @@ var render = function() {
                       src:
                         file.type === "directory"
                           ? "/images/iconcarpeta.svg"
-                          : file.type,
+                          : _vm.typeFile(file.type),
                       alt: ""
                     }
                   }),
@@ -7926,88 +8056,95 @@ var render = function() {
                         )
                       ]
                     )
-                  : _c("a", { staticClass: "m-r-20" }, [
-                      _c(
-                        "svg",
-                        {
-                          attrs: {
-                            width: "20px",
-                            height: "26px",
-                            viewBox: "0 0 20 26",
-                            version: "1.1",
-                            xmlns: "http://www.w3.org/2000/svg",
-                            "xmlns:xlink": "http://www.w3.org/1999/xlink"
-                          }
-                        },
-                        [
-                          _c(
-                            "g",
-                            {
-                              attrs: {
-                                id: "Page-1",
-                                stroke: "none",
-                                "stroke-width": "1",
-                                fill: "none",
-                                "fill-rule": "evenodd"
-                              }
-                            },
-                            [
-                              _c(
-                                "g",
-                                {
-                                  attrs: {
-                                    id: "Artboard",
-                                    transform:
-                                      "translate(-503.000000, -451.000000)"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "g",
-                                    {
-                                      attrs: {
-                                        id: "icondescargar",
-                                        transform:
-                                          "translate(503.000000, 451.000000)"
-                                      }
-                                    },
-                                    [
-                                      _c("path", {
+                  : _c(
+                      "a",
+                      {
+                        staticClass: "m-r-20",
+                        attrs: { target: "_blank", href: file.path }
+                      },
+                      [
+                        _c(
+                          "svg",
+                          {
+                            attrs: {
+                              width: "20px",
+                              height: "26px",
+                              viewBox: "0 0 20 26",
+                              version: "1.1",
+                              xmlns: "http://www.w3.org/2000/svg",
+                              "xmlns:xlink": "http://www.w3.org/1999/xlink"
+                            }
+                          },
+                          [
+                            _c(
+                              "g",
+                              {
+                                attrs: {
+                                  id: "Page-1",
+                                  stroke: "none",
+                                  "stroke-width": "1",
+                                  fill: "none",
+                                  "fill-rule": "evenodd"
+                                }
+                              },
+                              [
+                                _c(
+                                  "g",
+                                  {
+                                    attrs: {
+                                      id: "Artboard",
+                                      transform:
+                                        "translate(-503.000000, -451.000000)"
+                                    }
+                                  },
+                                  [
+                                    _c(
+                                      "g",
+                                      {
                                         attrs: {
-                                          d:
-                                            "M9.60555556,17.4777778 C9.89444444,17.7666667 10.3277778,17.7666667 10.6166667,17.4777778 L13.7944444,14.3 C14.0833333,14.0111111 14.0833333,13.5777778 13.7944444,13.2888889 C13.5055556,13 13.0722222,13 12.7833333,13.2888889 L10.8333333,15.1666667 L10.8333333,9.82222222 C10.8333333,9.38888889 10.4722222,9.1 10.1111111,9.1 C9.67777778,9.1 9.38888889,9.46111111 9.38888889,9.82222222 L9.38888889,15.1666667 L7.51111111,13.2888889 C7.22222222,13 6.78888889,13 6.42777778,13.2888889 C6.13888889,13.5777778 6.13888889,14.0111111 6.42777778,14.3 L9.60555556,17.4777778 Z",
-                                          id: "Path",
-                                          fill: "#444242"
+                                          id: "icondescargar",
+                                          transform:
+                                            "translate(503.000000, 451.000000)"
                                         }
-                                      }),
-                                      _vm._v(" "),
-                                      _c("path", {
-                                        attrs: {
-                                          d:
-                                            "M13.2888889,19.4277778 L6.93333333,19.4277778 C6.5,19.4277778 6.21111111,19.7888889 6.21111111,20.15 C6.21111111,20.5833333 6.57222222,20.8722222 6.93333333,20.8722222 L13.2888889,20.8722222 C13.7222222,20.8722222 14.0111111,20.5111111 14.0111111,20.15 C14.0111111,19.7166667 13.7222222,19.4277778 13.2888889,19.4277778 Z",
-                                          id: "Path",
-                                          fill: "#444242"
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c("path", {
-                                        attrs: {
-                                          d:
-                                            "M17.2611111,0.361111111 L6.13888889,0.361111111 C5.92222222,0.361111111 5.77777778,0.433333333 5.63333333,0.577777778 L0.866666667,5.34444444 C0.722222222,5.48888889 0.65,5.63333333 0.65,5.85 L0.65,23.3277778 C0.65,24.6277778 1.66111111,25.6388889 2.96111111,25.6388889 L17.2611111,25.6388889 C18.5611111,25.6388889 19.5722222,24.6277778 19.5722222,23.3277778 L19.5722222,2.67222222 C19.5722222,1.44444444 18.5611111,0.361111111 17.2611111,0.361111111 Z M6.21111111,2.09444444 L6.21111111,5.05555556 C6.21111111,5.48888889 5.85,5.92222222 5.34444444,5.92222222 L2.38333333,5.92222222 L6.21111111,2.09444444 Z M18.1277778,23.3277778 C18.1277778,23.7611111 17.7666667,24.1944444 17.2611111,24.1944444 L2.96111111,24.1944444 C2.52777778,24.1944444 2.09444444,23.8333333 2.09444444,23.3277778 L2.09444444,7.43888889 L5.34444444,7.43888889 C6.64444444,7.43888889 7.65555556,6.42777778 7.65555556,5.12777778 L7.65555556,1.87777778 L17.2611111,1.87777778 C17.6944444,1.87777778 18.1277778,2.23888889 18.1277778,2.74444444 L18.1277778,23.3277778 Z",
-                                          id: "Shape",
-                                          fill: "#A4C49A",
-                                          "fill-rule": "nonzero"
-                                        }
-                                      })
-                                    ]
-                                  )
-                                ]
-                              )
-                            ]
-                          )
-                        ]
-                      )
-                    ]),
+                                      },
+                                      [
+                                        _c("path", {
+                                          attrs: {
+                                            d:
+                                              "M9.60555556,17.4777778 C9.89444444,17.7666667 10.3277778,17.7666667 10.6166667,17.4777778 L13.7944444,14.3 C14.0833333,14.0111111 14.0833333,13.5777778 13.7944444,13.2888889 C13.5055556,13 13.0722222,13 12.7833333,13.2888889 L10.8333333,15.1666667 L10.8333333,9.82222222 C10.8333333,9.38888889 10.4722222,9.1 10.1111111,9.1 C9.67777778,9.1 9.38888889,9.46111111 9.38888889,9.82222222 L9.38888889,15.1666667 L7.51111111,13.2888889 C7.22222222,13 6.78888889,13 6.42777778,13.2888889 C6.13888889,13.5777778 6.13888889,14.0111111 6.42777778,14.3 L9.60555556,17.4777778 Z",
+                                            id: "Path",
+                                            fill: "#444242"
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("path", {
+                                          attrs: {
+                                            d:
+                                              "M13.2888889,19.4277778 L6.93333333,19.4277778 C6.5,19.4277778 6.21111111,19.7888889 6.21111111,20.15 C6.21111111,20.5833333 6.57222222,20.8722222 6.93333333,20.8722222 L13.2888889,20.8722222 C13.7222222,20.8722222 14.0111111,20.5111111 14.0111111,20.15 C14.0111111,19.7166667 13.7222222,19.4277778 13.2888889,19.4277778 Z",
+                                            id: "Path",
+                                            fill: "#444242"
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("path", {
+                                          attrs: {
+                                            d:
+                                              "M17.2611111,0.361111111 L6.13888889,0.361111111 C5.92222222,0.361111111 5.77777778,0.433333333 5.63333333,0.577777778 L0.866666667,5.34444444 C0.722222222,5.48888889 0.65,5.63333333 0.65,5.85 L0.65,23.3277778 C0.65,24.6277778 1.66111111,25.6388889 2.96111111,25.6388889 L17.2611111,25.6388889 C18.5611111,25.6388889 19.5722222,24.6277778 19.5722222,23.3277778 L19.5722222,2.67222222 C19.5722222,1.44444444 18.5611111,0.361111111 17.2611111,0.361111111 Z M6.21111111,2.09444444 L6.21111111,5.05555556 C6.21111111,5.48888889 5.85,5.92222222 5.34444444,5.92222222 L2.38333333,5.92222222 L6.21111111,2.09444444 Z M18.1277778,23.3277778 C18.1277778,23.7611111 17.7666667,24.1944444 17.2611111,24.1944444 L2.96111111,24.1944444 C2.52777778,24.1944444 2.09444444,23.8333333 2.09444444,23.3277778 L2.09444444,7.43888889 L5.34444444,7.43888889 C6.64444444,7.43888889 7.65555556,6.42777778 7.65555556,5.12777778 L7.65555556,1.87777778 L17.2611111,1.87777778 C17.6944444,1.87777778 18.1277778,2.23888889 18.1277778,2.74444444 L18.1277778,23.3277778 Z",
+                                            id: "Shape",
+                                            fill: "#A4C49A",
+                                            "fill-rule": "nonzero"
+                                          }
+                                        })
+                                      ]
+                                    )
+                                  ]
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    ),
                 _vm._v(" "),
                 _c("a", { attrs: { href: "" } }, [
                   _c(
@@ -8388,124 +8525,178 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("form", { staticClass: "Form row" }, [
-    _c("div", { staticClass: "col-8 p-l-12" }, [
-      _c("div", { staticClass: "row middle-items m-t-12" }, [
-        _c(
-          "label",
-          {
-            staticClass: "col-6 is-text-center",
-            attrs: { for: "category_id" }
-          },
-          [_vm._v("Categoría")]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-10" }, [
+  return _c(
+    "form",
+    {
+      staticClass: "Form row",
+      attrs: { action: "/admin/archivos", method: "post" }
+    },
+    [
+      _c("div", { staticClass: "col-8 p-l-12" }, [
+        _c("div", { staticClass: "row middle-items m-t-12" }, [
           _c(
-            "select",
-            { attrs: { name: "category_id", id: "category_id" } },
-            [
-              _c("option", { attrs: { value: "" } }, [
-                _vm._v("Seleccione una categoría")
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.categories, function(category) {
-                return _c("option", { domProps: { value: category.name } }, [
-                  _vm._v(_vm._s(category.name))
-                ])
-              })
-            ],
-            2
-          )
+            "label",
+            {
+              staticClass: "col-6 is-text-center",
+              attrs: { for: "category_id" }
+            },
+            [_vm._v("Categoría")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-10" }, [
+            _c(
+              "select",
+              { attrs: { name: "category_id", id: "category_id" } },
+              [
+                _c("option", { attrs: { value: "" } }, [
+                  _vm._v("Seleccione una categoría")
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.categories, function(category) {
+                  return _c("option", { domProps: { value: category.id } }, [
+                    _vm._v(_vm._s(category.name))
+                  ])
+                })
+              ],
+              2
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "row middle-items m-t-12" }, [
+          _c(
+            "label",
+            {
+              staticClass: "col-6 is-text-center",
+              attrs: { for: "directory" }
+            },
+            [_vm._v("Carpeta")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-10" }, [
+            _c(
+              "select",
+              { attrs: { name: "directory", id: "directory" } },
+              [
+                _c("option", { attrs: { value: "" } }, [
+                  _vm._v("Seleccione una carpeta")
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.directories, function(directory) {
+                  return _c("option", { domProps: { value: directory } }, [
+                    _vm._v(_vm._s(directory))
+                  ])
+                })
+              ],
+              2
+            )
+          ])
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "row middle-items m-t-12" }, [
-        _c(
-          "label",
-          { staticClass: "col-6 is-text-center", attrs: { for: "url" } },
-          [_vm._v("Carpeta")]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-10" }, [
+      _c("div", { staticClass: "col-8 p-l-12" }, [
+        _c("div", { staticClass: "row middle-items m-t-12" }, [
           _c(
-            "select",
-            { attrs: { name: "url", id: "url" } },
-            [
-              _c("option", { attrs: { value: "" } }, [
-                _vm._v("Seleccione una carpeta")
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.directories, function(directory) {
-                return _c("option", { domProps: { value: directory } }, [
-                  _vm._v(_vm._s(directory))
-                ])
-              })
-            ],
-            2
-          )
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "col-8 p-l-12" }, [
-      _c("div", { staticClass: "row middle-items m-t-12" }, [
-        _c(
-          "label",
-          { staticClass: "col-6 is-text-center", attrs: { for: "months" } },
-          [_vm._v("Mes")]
-        ),
+            "label",
+            { staticClass: "col-6 is-text-center", attrs: { for: "months" } },
+            [_vm._v("Mes")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-10" }, [
+            _c(
+              "select",
+              { attrs: { name: "month", id: "months" } },
+              [
+                _c("option", { attrs: { value: "" } }, [
+                  _vm._v("Seleccione el mes")
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.months, function(month) {
+                  return _c("option", { domProps: { value: month } }, [
+                    _vm._v(_vm._s(month))
+                  ])
+                })
+              ],
+              2
+            )
+          ])
+        ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-10" }, [
+        _c("div", { staticClass: "row middle-items m-t-12" }, [
           _c(
-            "select",
-            { attrs: { name: "month", id: "months" } },
-            [
-              _c("option", { attrs: { value: "" } }, [
-                _vm._v("Seleccione el mes")
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.months, function(month) {
-                return _c("option", { domProps: { value: month } }, [
-                  _vm._v(_vm._s(month))
-                ])
-              })
-            ],
-            2
-          )
+            "label",
+            { staticClass: "col-6 is-text-center", attrs: { for: "year" } },
+            [_vm._v("Año")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-10" }, [
+            _c(
+              "select",
+              { attrs: { name: "year", id: "year" } },
+              [
+                _c("option", { attrs: { value: "" } }, [
+                  _vm._v("Seleccione el año")
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.years, function(year) {
+                  return _c("option", { domProps: { value: year } }, [
+                    _vm._v(_vm._s(year))
+                  ])
+                })
+              ],
+              2
+            )
+          ])
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "row middle-items m-t-12" }, [
-        _c(
-          "label",
-          { staticClass: "col-6 is-text-center", attrs: { for: "year" } },
-          [_vm._v("Año")]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-10" }, [
+      _c("div", {
+        staticClass: "dropzone row justify-center middle-items col-16 m-t-24"
+      }),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "justify-center row m-t-40 is-full-width m-b-20" },
+        [
           _c(
-            "select",
-            { attrs: { name: "year", id: "year" } },
-            [
-              _c("option", { attrs: { value: "" } }, [
-                _vm._v("Seleccione el año")
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.years, function(year) {
-                return _c("option", { domProps: { value: year } }, [
-                  _vm._v(_vm._s(year))
-                ])
-              })
-            ],
-            2
+            "button",
+            { attrs: { type: "submit", disabled: _vm.disabledButton } },
+            [_vm._v("Guardar archivo")]
           )
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "dropzone row justify-center col-16 m-t-24" })
-  ])
+        ]
+      ),
+      _vm._v(" "),
+      _c("input", {
+        attrs: { type: "hidden", name: "mime" },
+        domProps: { value: _vm.mime }
+      }),
+      _vm._v(" "),
+      _c("input", {
+        attrs: { type: "hidden", name: "extension" },
+        domProps: { value: _vm.extension }
+      }),
+      _vm._v(" "),
+      _c("input", {
+        attrs: { type: "hidden", name: "path" },
+        domProps: { value: _vm.path }
+      }),
+      _vm._v(" "),
+      _c("input", {
+        attrs: { type: "hidden", name: "name" },
+        domProps: { value: _vm.name }
+      }),
+      _vm._v(" "),
+      _c("input", {
+        attrs: { type: "hidden", name: "client_id" },
+        domProps: { value: _vm.client.id }
+      }),
+      _vm._v(" "),
+      _c("input", {
+        attrs: { type: "hidden", name: "_token" },
+        domProps: { value: _vm.token }
+      })
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -20719,35 +20910,18 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var token = document.querySelector('[name=_token]'),
-    buttonsDelete = document.querySelectorAll('.File-delete'),
-    finalizeButton = document.getElementById('finalizeButton');
-/* harmony default export */ __webpack_exports__["default"] = (function () {
-  var dropzone = new dropzone__WEBPACK_IMPORTED_MODULE_0___default.a('.dropzone', {
-    url: '/admin/archivos/',
+/* harmony default export */ __webpack_exports__["default"] = (function (token) {
+  dropzone__WEBPACK_IMPORTED_MODULE_0___default.a.autoDiscover = false;
+  return new dropzone__WEBPACK_IMPORTED_MODULE_0___default.a('.dropzone', {
+    url: '/admin/archivos/uploadFileTemp',
     headers: {
-      'X-CSRF-TOKEN': token.value
+      'X-CSRF-TOKEN': token
     },
     acceptedFiles: 'image/*,application/pdf',
     paramName: 'files',
-    maxFilesize: 5,
-    dictDefaultMessage: '<div class="dropzone-buttonMessage">Selecciona tus documentos</div>' + '<div class="dropzone-message">(FOTOCOPIA DE LA CÉDULA AL 150%)</div>',
+    maxFiles: 1,
+    dictDefaultMessage: '<img src="/../images/iconarrastre.png" alt="">' + '<i class="dropzone-buttonMessage">Arrastre o haga clic para subir archivo</i>',
     addRemoveLinks: true
-  });
-  dropzone.on("addedfile", function () {//  finalizeButton.setAttribute('disabled', 'disabled')
-  });
-  dropzone.on("success", function (file, response) {
-    console.log(response); // finalizeButton.removeAttribute('disabled');
-    // file.id_number = response;
-  });
-  dropzone.on('removedfile', function (file) {
-    destroyFile(file.id_number);
-  });
-  dropzone__WEBPACK_IMPORTED_MODULE_0___default.a.autoDiscover = false;
-  buttonsDelete.forEach(function (item) {
-    item.addEventListener('click', function () {
-      destroyFile(item.dataset.id, this.parentNode);
-    });
   });
 });
 

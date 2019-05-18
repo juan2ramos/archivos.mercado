@@ -38,6 +38,12 @@
     margin: auto;
     background: #538244;
 
+    &.disabled {
+      pointer-events: none;
+      background: #d0d0d0;
+      color: #afafaf;
+    }
+
     &.cancel {
       background: #be2626;
     }

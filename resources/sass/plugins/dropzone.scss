@@ -214,9 +214,9 @@
 
 .dropzone {
   min-height: 350px;
-  background: url("../images/back-upload-files.png") no-repeat center  50px, #F4F4F4;
+
   padding: 20px 20px;
-  align-items: flex-end;
+  border: 6px dashed;
 }
 
 .dropzone.dz-clickable {
@@ -357,7 +357,6 @@
 }
 
 .dropzone .dz-preview .dz-image {
-  border-radius: 20px;
   overflow: hidden;
   width: 120px;
   height: 120px;
@@ -508,12 +507,9 @@
 }
 
 .dropzone-buttonMessage {
-  background: white;
-  border: var(--primary-color) 1px solid;
-  padding: 8px;
-  border-radius: 4px;
   color: #909090;
-  font-weight: 300;
+  font-weight: 400;
+  font-size: 2.4rem;
 }
 
 .dropzone-message {

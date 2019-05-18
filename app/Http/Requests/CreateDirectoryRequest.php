@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class CreateFolderRequest extends FormRequest
+class CreateDirectoryRequest extends FormRequest
 {
 
 
@@ -35,7 +35,7 @@ class CreateFolderRequest extends FormRequest
         ];
     }
 
-    public function createFolder()
+    public function createDirectory()
     {
         $name = Str::slug($this->get('name'));
         $directoryRoute = $this->getRootDirectory() . $this->get('path') . '/' . $name;

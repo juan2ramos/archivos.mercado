@@ -19,14 +19,13 @@ class CreateFilesTable extends Migration
             $table->string('name');
             $table->string('year');
             $table->string('month');
-            $table->string('url');
+            $table->string('path');
             $table->string('mime');
-
+            $table->string('directory');
+            $table->string('extension');
 
             $table->unsignedBigInteger('client_id');
             $table->foreign('client_id')->references('id')->on('clients');
-            $table->unsignedBigInteger('agency_id');
-            $table->foreign('agency_id')->references('id')->on('agencies');
             $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')->references('id')->on('categories');
 

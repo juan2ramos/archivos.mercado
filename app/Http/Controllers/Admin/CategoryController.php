@@ -21,4 +21,15 @@ class CategoryController extends Controller
         return $request->createCategory();
     }
 
+    public function update(CreateCategoryRequest $request, Category $category)
+    {
+        return $request->updateCategory($category);
+    }
+
+    public function destroy(Category $category)
+    {
+        $category->delete();
+        return ['success' => true];
+    }
+
 }

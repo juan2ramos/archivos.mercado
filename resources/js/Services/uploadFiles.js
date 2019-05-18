@@ -2,46 +2,21 @@ import Dropzone from 'dropzone';
 import axios from 'axios';
 import swal from 'sweetalert';
 
-const
-    token = document.querySelector('[name=_token]'),
-    buttonsDelete = document.querySelectorAll('.File-delete'),
-    finalizeButton = document.getElementById('finalizeButton');
 
-export default function () {
+export default function (token) {
+    Dropzone.autoDiscover = false;
+    return new Dropzone('.dropzone', {
+        url: '/admin/archivos/uploadFileTemp',
+        headers: {'X-CSRF-TOKEN': token},
+        acceptedFiles: 'image/*,application/pdf',
+        paramName: 'files',
+        maxFiles: 1,
+        dictDefaultMessage: '<img src="/../images/iconarrastre.png" alt="">' +
+            '<i class="dropzone-buttonMessage">Arrastre o haga clic para subir archivo</i>',
+        addRemoveLinks: true,
 
-        const dropzone = new Dropzone('.dropzone', {
-            url: '/admin/archivos/',
-            headers: {'X-CSRF-TOKEN': token.value},
-            acceptedFiles: 'image/*,application/pdf',
-            paramName: 'files',
-            maxFilesize: 5,
-            dictDefaultMessage: '<div class="dropzone-buttonMessage">Selecciona tus documentos</div>' +
-                '<div class="dropzone-message">(FOTOCOPIA DE LA CÉDULA AL 150%)</div>',
-            addRemoveLinks: true,
+    });
 
-        });
-        dropzone.on("addedfile", function () {
-            //  finalizeButton.setAttribute('disabled', 'disabled')
-
-        });
-        dropzone.on("success", function (file, response) {
-            console.log(response)
-            // finalizeButton.removeAttribute('disabled');
-            // file.id_number = response;
-
-        });
-        dropzone.on('removedfile', function (file) {
-            destroyFile(file.id_number);
-        });
-
-        Dropzone.autoDiscover = false;
-
-        buttonsDelete.forEach(function (item) {
-
-            item.addEventListener('click', function () {
-                destroyFile(item.dataset.id, this.parentNode)
-            });
-        });
 
 }
 

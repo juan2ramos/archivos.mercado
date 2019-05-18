@@ -3397,6 +3397,12 @@ tr:nth-child(2n) {
   background: #538244;
 }
 
+.FormEdit-link.disabled {
+  pointer-events: none;
+  background: #d0d0d0;
+  color: #afafaf;
+}
+
 .FormEdit-link.cancel {
   background: #be2626;
 }
@@ -3510,9 +3516,8 @@ tr:nth-child(2n) {
 
 .dropzone {
   min-height: 350px;
-  background: url(/images/back-upload-files.png?2c48e14fb66b5f618d7b81b78c64910f) no-repeat center 50px, #F4F4F4;
   padding: 20px 20px;
-  align-items: flex-end;
+  border: 6px dashed;
 }
 
 .dropzone.dz-clickable {
@@ -3648,7 +3653,6 @@ tr:nth-child(2n) {
 }
 
 .dropzone .dz-preview .dz-image {
-  border-radius: 20px;
   overflow: hidden;
   width: 120px;
   height: 120px;
@@ -3776,12 +3780,9 @@ tr:nth-child(2n) {
 }
 
 .dropzone-buttonMessage {
-  background: white;
-  border: var(--primary-color) 1px solid;
-  padding: 8px;
-  border-radius: 4px;
   color: #909090;
-  font-weight: 300;
+  font-weight: 400;
+  font-size: 2.4rem;
 }
 
 .dropzone-message {

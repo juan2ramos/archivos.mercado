@@ -1,5 +1,15 @@
 <template>
     <div class="table-container m-t-36">
+        <form @submit.prevent="createFile()" class="Form m-b-60">
+            <h3>Crear categoria </h3>
+            <div class="row middle-items m-t-12">
+                <label class="col-5 is-text-center" for="name-folder">Nombre de la categoria</label>
+                <div class="col-7">
+                    <input name="name" v-model="name" id="name-folder" placeholder="Ingrese el nombre de la categoria">
+                </div>
+                <button class="col" :disabled="disabled">Crear</button>
+            </div>
+        </form>
         <table>
             <thead>
             <tr>
@@ -8,17 +18,18 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="category in categoriesLocal">
+            <tr v-for="(category, index) in categoriesLocal">
                 <td>
                     <div v-show="!category.editing">{{category.name}}</div>
-                    <form
-                            v-show="category.editing" class="row middle-items  FormEdit">
+                    <form @submit.prevent="updateCategory(category)"
+                          v-show="category.editing" class="row middle-items  FormEdit">
                         <input class="col-10" type="text" v-model="category.name">
                         <div class="m-l-4  is-text-center">
-                            <a class="FormEdit-link" @click.prevent="updateCategory(category)" >✓</a>
+                            <a :class="[category.updating ? 'disabled' : '', 'FormEdit-link' ] "
+                               @click.prevent="updateCategory(category)">✓</a>
                         </div>
                         <div class="m-l-4   is-text-center">
-                            <a class="FormEdit-link cancel" @click.prevent="updateCategory(category)" >X</a>
+                            <a class="FormEdit-link cancel" @click.prevent="editCategoryCancel(category)">X</a>
                         </div>
                     </form>
                 </td>
@@ -37,7 +48,7 @@
                             </g>
                         </svg>
                     </a>
-                    <a href="">
+                    <a href="" @click.prevent="deleteCategory(category, index)">
                         <svg width="22px" height="26px" viewBox="0 0 22 26" version="1.1"
                              xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -62,21 +73,12 @@
             </tr>
             </tbody>
         </table>
-        <form @submit.prevent="createFile()" class="Form m-t-60">
-            <h3>Crear categoria </h3>
-            <div class="row middle-items m-t-12">
-                <label class="col-5 is-text-center" for="name-folder">Nombre de la categoria</label>
-                <div class="col-7">
-                    <input name="name" v-model="name" id="name-folder" placeholder="Ingrese el nombre de la categoria">
-                </div>
-                <button class="col" :disabled="disabled">Crear</button>
-            </div>
-        </form>
+
     </div>
 </template>
 <script>
     import axios from 'axios';
-
+    import swal from 'sweetalert';
     export default {
         name: 'CategoriesTable',
         props: ['categories', 'token'],
@@ -84,12 +86,12 @@
             return {
                 name: '',
                 disabled: false,
-                categoriesLocal: {}
+                categoriesLocal: []
             }
         },
         mounted: function () {
-            this.categoriesLocal = Object.assign({}, this.categoriesLocal, this.categories.map((item) =>
-                ({'id': item.id, 'name': item.name, 'editing': false})))
+            this.categoriesLocal = Object.assign([], this.categoriesLocal, this.categories.map((item) =>
+                ({'id': item.id, 'name': item.name, 'nameBack': item.name, 'editing': false, 'updating': false})))
         },
         methods: {
             createFile() {
@@ -99,9 +101,19 @@
                     'name': this.name,
                 }).then((response) => {
                     this.disabled = false;
-                    this.categoriesLocal.push(response.data);
+                    this.categoriesLocal.push(
+                        {
+                            'id': response.data.id,
+                            'name': response.data.name,
+                            'nameBack': response.data.name,
+                            'editing': false,
+                            'updating': false
+                        }
+                    );
+                    swal("Categoria ha sido  creada", {icon: "success",});
                     this.name = '';
                 }).catch((error) => {
+                    console.log(error);
                     this.disabled = false;
                     if (error.response.status === 422) {
                         this.errors = error.response.data;
@@ -110,14 +122,54 @@
                 });
             },
             editCategory(category) {
+                category.nameBack = category.name;
                 category.editing = true;
             },
             editCategoryCancel(category) {
+                category.name = category.nameBack;
                 category.editing = false;
             },
-
             updateCategory(category) {
-                category.editing = false;
+                category.updating = true;
+                axios.put(`/admin/categorias/${category.id}`, {
+                    '_token': this.token,
+                    'name': category.name,
+                }).then((response) => {
+                    category.editing = false;
+                    category.name = response.data.name;
+                    category.updating = false;
+                }).catch((error) => {
+                    this.disabled = false;
+                    if (error.response.status === 422) {
+                        this.errors = error.response.data;
+                        category.name = category.nameBack;
+                        category.editing = false;
+                    }
+                });
+            },
+
+            deleteCategory(category, index) {
+                swal({
+                    title: "Estas seguro ?",
+                    text: "Recuerda que se ya no prodrás recuper la información.",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willDelete) => {
+
+                    if (willDelete) {
+                        axios.delete(`/admin/categorias/${category.id}`)
+                            .then((response) => {
+                                if (response.data.success) {
+                                    this.categoriesLocal.splice(index, 1);
+                                    swal("Categoria ha sido  eliminada", {icon: "success",});
+                                    return
+                                }
+                                swal("Hubo un error! Vuelve a intentarlo", {icon: "error",});
+                            });
+                    }
+                });
+
             }
         }
 

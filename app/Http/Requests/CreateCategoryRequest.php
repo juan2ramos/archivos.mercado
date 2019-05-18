@@ -24,4 +24,10 @@ class CreateCategoryRequest extends FormRequest
     {
         return Category::create(['name' => $this->name]);
     }
+    public function updateCategory(Category $category)
+    {
+        $category->fill($this->all());
+        $category->save();
+        return $category;
+    }
 }

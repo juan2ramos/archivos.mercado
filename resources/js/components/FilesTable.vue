@@ -23,7 +23,7 @@
                         <div class="row middle-items">
                             <img class="m-r-20"
                                  :src=" (file.type === 'directory')
-                                  ? '/images/iconcarpeta.svg': file.type"
+                                  ? '/images/iconcarpeta.svg': typeFile(file.type)"
                                  alt="">
                             <span>{{file.name}}</span>
                         </div>
@@ -46,7 +46,7 @@
                                 </g>
                             </svg>
                         </a>
-                        <a class="m-r-20" v-else>
+                        <a class="m-r-20" target="_blank" :href="file.path" v-else>
                             <svg width="20px" height="26px" viewBox="0 0 20 26" version="1.1"
                                  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -132,7 +132,7 @@
                 routeFiles: '',
                 params: {},
                 routePath: '',
-                disabled:false
+                disabled: false,
             }
         },
         mounted: function () {
@@ -153,26 +153,36 @@
         },
         methods: {
             createFile() {
-                this.disabled= true;
-                axios.post('/admin/archivos/', {
+                this.disabled = true;
+                axios.post('/admin/directorios/', {
                     '_token': this.token,
                     'name': this.name,
                     'path': this.client.nit + '/' + this.routeFiles,
                 }).then((response) => {
-                    this.disabled= false;
+                    this.disabled = false;
                     this.filesLocal.push({
                         'name': response.data.name,
                         'path': response.data.path,
                         'type': 'directory',
                     });
-                    this.name= '';
+                    this.name = '';
                 }).catch((error) => {
-                    this.disabled= false;
+                    this.disabled = false;
                     if (error.response.status === 422) {
                         this.errors = error.response.data;
                         console.log(this.errors);
                     }
                 });
+            },
+            typeFile(type) {
+                const types = {
+                    png: 'iconimagen.svg',
+                    jpg: 'iconimagen.svg',
+                    jpeg: 'iconimagen.svg',
+                    pdf: 'iconpdf.svg',
+                    rar: 'iconrar.svg',
+                };
+                return '/images/' + types[type]
             }
         }
     }
