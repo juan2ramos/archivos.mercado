@@ -4,11 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\CreateFileRequest;
 use App\Http\Controllers\Controller;
-use http\Env\Request;
+use App\Models\Category;
+use App\Models\File;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
+    public function index(Request $request)
+    {
+        $categories = Category::all();
+        return view('admin.files.index', compact('categories'));
+    }
 
     public function store(CreateFileRequest $request)
     {
@@ -20,12 +27,16 @@ class FileController extends Controller
     {
         $file = $request->file('files');
         $mime = $file->getMimeType();
-        $name = $file->getFilename();
+        $name = $file->getClientOriginalName();
         $extension = $file->extension();
         $path = Storage::putFile('mercado/temp', $file, 'public');
         return compact('mime', 'name', 'extension', 'path');
     }
 
-
+    public function filterProducts(Request $request)
+    {
+        $files =  File::search($request);
+        return $files;
+    }
 
 }

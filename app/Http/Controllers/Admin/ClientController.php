@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\CreateClientRequest;
+use App\Http\Requests\UpdateClientRequest;
 use App\ManageFiles\ViewFiles;
 use App\Models\Category;
 use App\Models\Client;
@@ -43,14 +44,15 @@ class ClientController extends Controller
         return view('admin.users.show', compact('client', 'files'));
     }
 
-    public function edit($id)
+    public function edit(Client $client)
     {
-        //
+        return view('admin.users.edit', compact('client'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateClientRequest $request, Client $client)
     {
-        //
+        $client = $request->updateClient();
+        return redirect()->route('users.edit', $client->nit)->with(['success' => 'Usuario actulizado']);
     }
 
     public function destroy($id)

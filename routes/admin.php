@@ -1,6 +1,7 @@
 <?php
 
-Route::get('/', 'DirectoryController@index')->middleware('can:isAdmin')->name('dashboard');
+Route::get('/', 'FileController@index')
+    ->middleware('can:isAdmin')->name('dashboard');
 
 Route::resource('usuarios', 'ClientController')
     ->names('users')
@@ -25,6 +26,12 @@ Route::post('archivos/downloadFile', 'FileController@downloadFile')
 
 Route::get('usuarios/{client}/subir-archivo', 'ClientController@uploadFile')
     ->middleware('can:isAdmin')->name('client.uploadFile');
+
+Route::get('filter-products', 'FileController@filterProducts')
+    ->middleware('can:isAdmin')->name('files.filter');
+
+Route::get('perfil', 'UserController@index')
+    ->middleware('can:isAdmin')->name('profile');
 
 Route::resource('categorias', 'CategoryController')
     ->names('category')

@@ -1,52 +1,57 @@
 <template>
     <div>
-        <div class="Crumbs m-t-32">
-            <span> Ruta: <a :href="'/admin/usuarios/' + client.nit">{{client.nit}}</a> </span>
-            <span v-for="param in params">
-               >
-                <a :href="'/admin/usuarios/' + client.nit + '?route_files=' + param.url">
-                    {{param.name}}
-                </a>
-            </span>
+        <div class="row justify-between-m justify-center BarTop middle-items p-8">
+            <form action="" @submit.prevent="filterFiles()" method="get" class="row col ">
+                <label for="" class="col-5 m-r-8">
+                    <input type="search" v-model="search" placeholder="Por nombre" name="search" class="row">
+                </label>
+                <label for="" class="col-3 m-r-8">
+                    <select name="" id="" v-model="category">
+                        <option value="">Por Categoria</option>
+                        <option v-for="category in categories" :value="category.id">{{category.name}}</option>
+                    </select>
+                </label>
+                <label for="" class="col-2 m-r-8">
+                    <select name="year" id="year" v-model="year">
+                        <option value="">Por año</option>
+                        <option v-for="year in years" :value="year">{{year}}</option>
+                    </select>
+                </label>
+                <label for="" class="col-3 m-r-8">
+                    <select name="month" id="months" v-model="month">
+                        <option value="">Por mes</option>
+                        <option v-for="month in months" :value="month">{{month}}</option>
+                    </select>
+                </label>
+                <button style="min-width: 14.2rem; border-radius: 4px;" :disabled="disabled" type="submit">Filtrar</button>
+            </form>
+
         </div>
-        <div>
+        <div class="m-t-24" v-if="Object.keys(files).length !== 0 && files.constructor !== Object">
             <table class="">
                 <thead>
                 <tr>
                     <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Fecha</th>
                     <th class=" is-text-center">Acción</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="file in filesLocal">
+                <tr v-for="file in files">
                     <td>
                         <div class="row middle-items">
                             <img class="m-r-20"
-                                 :src=" (file.type === 'directory')
-                                  ? '/images/iconcarpeta.svg': typeFile(file.type)"
+                                 :src="typeFile(file.extension)"
                                  alt="">
                             <span>{{file.name}}</span>
                         </div>
                     </td>
+                    <td>{{file.category.name}}</td>
+                    <td>{{`${file.month} - ${file.year}`}}</td>
                     <td class="row justify-center">
-                        <a :href="'/admin/usuarios/' + client.nit + '?route_files=' + routeFiles + file.name"
-                           class="m-r-20" v-if="file.type === 'directory'">
-                            <svg width="29px" height="26px" viewBox="0 0 29 26" version="1.1"
-                                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <g id="Artboard" transform="translate(-250.000000, -157.000000)">
-                                        <g id="iconcarpeta2" transform="translate(250.000000, 157.000000)">
-                                            <path d="M28.2608696,7.12173913 C28.2608696,5.31304348 26.7913043,3.73043478 24.8695652,3.73043478 L16.5043478,3.73043478 C16.2782609,2.14782609 14.8086957,0.904347826 13.226087,0.904347826 L3.39130435,0.904347826 C1.5826087,0.904347826 0,2.37391304 0,4.29565217 L0,24.1913043 C0,24.7565217 0.452173913,25.2086957 1.0173913,25.2086957 L27.3565217,25.2086957 C27.9217391,25.2086957 28.373913,24.7565217 28.373913,24.1913043 L28.373913,7.12173913 L28.2608696,7.12173913 Z M26.3391304,23.173913 L1.92173913,23.173913 L1.92173913,4.29565217 C1.92173913,3.50434783 2.6,2.82608696 3.39130435,2.82608696 L13.226087,2.82608696 C14.0173913,2.82608696 14.6956522,3.50434783 14.6956522,4.29565217 L14.6956522,4.74782609 C14.6956522,5.2 15.0347826,5.65217391 15.6,5.65217391 L24.8695652,5.65217391 C25.6608696,5.65217391 26.3391304,6.33043478 26.3391304,7.12173913 L26.3391304,23.173913 Z"
-                                                  id="Shape" fill="#A4C49A" fill-rule="nonzero"></path>
-                                            <path d="M14.4522947,9.2884058 C14.2890097,9.12512077 14.1257246,9.04347826 13.9624396,9.04347826 C13.7991546,9.04347826 13.5542271,9.12512077 13.4725845,9.2884058 L9.22717391,13.8603865 C8.98224638,14.1869565 8.98224638,14.5951691 9.22717391,14.9217391 C9.55374396,15.1666667 9.96195652,15.1666667 10.2885266,14.9217391 L13.3092995,11.7376812 L13.3092995,19.6570048 C13.3092995,20.0652174 13.6358696,20.3917874 14.0440821,20.3917874 C14.4522947,20.3917874 14.7788647,20.0652174 14.7788647,19.6570048 L14.7788647,11.7376812 L17.7996377,14.9217391 C18.0445652,15.2483092 18.5344203,15.2483092 18.8609903,14.9217391 C19.1875604,14.6768116 19.1875604,14.1869565 18.8609903,13.8603865 L14.4522947,9.2884058 Z"
-                                                  id="Path" fill="#444242"
-                                                  transform="translate(14.074698, 14.717633) rotate(90.361459) translate(-14.074698, -14.717633) "></path>
-                                        </g>
-                                    </g>
-                                </g>
-                            </svg>
-                        </a>
-                        <a class="m-r-20" target="_blank" :href="file.path" v-else>
+
+                        <a class="m-r-20" target="_blank" :href="file.path">
                             <svg width="20px" height="26px" viewBox="0 0 20 26" version="1.1"
                                  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -63,21 +68,7 @@
                                 </g>
                             </svg>
                         </a>
-                        <a v-if="file.type === 'directory'" href="">
 
-                            <svg class="m-r-20" width="25px" height="26px" viewBox="0 0 25 26" version="1.1"
-                                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <g id="Artboard" transform="translate(-168.000000, -152.000000)" fill="#778E70"
-                                       fill-rule="nonzero">
-                                        <g id="iconeditar" transform="translate(168.000000, 152.000000)">
-                                            <path d="M23.4,2.6 C21.2,0.4 17.7,0.4 15.6,2.6 L1.3,16.9 C1.2,17 1.1,17.2 1.1,17.3 L0,25.2 C0,25.4 0,25.6 0.2,25.8 C0.3,25.9 0.5,26 0.7,26 C0.7,26 0.8,26 0.8,26 L5.5,25.4 C5.9,25.3 6.2,25 6.1,24.6 C6,24.2 5.7,23.9 5.3,24 L1.5,24.5 L2.3,19 L8.1,24.8 C8.2,24.9 8.4,25 8.6,25 C8.8,25 9,24.9 9.1,24.8 L23.4,10.4 C24.4,9.4 25,8 25,6.5 C25,5 24.4,3.7 23.4,2.6 Z M15.9,4.4 L18.3,6.8 L5.2,19.8 L2.8,17.4 L15.9,4.4 Z M8.6,23.2 L6.3,20.9 L19.3,7.8 L21.6,10.1 L8.6,23.2 Z M22.6,9.1 L16.9,3.4 C17.6,2.8 18.5,2.5 19.5,2.5 C20.6,2.5 21.6,2.9 22.4,3.7 C23.2,4.5 23.6,5.5 23.6,6.6 C23.6,7.5 23.2,8.4 22.6,9.1 Z"
-                                                  id="Shape"></path>
-                                        </g>
-                                    </g>
-                                </g>
-                            </svg>
-                        </a>
                         <a href="">
 
                             <svg width="22px" height="26px" viewBox="0 0 22 26" version="1.1"
@@ -105,74 +96,43 @@
                 </tbody>
             </table>
         </div>
-        <form @submit.prevent="createFile()" class="Form m-t-60">
-            <h3>Crear un nuevo archivo</h3>
-            <div class="row middle-items m-t-12">
-                <label class="col-5 is-text-center" for="name-folder">Nombre de la carpeta</label>
-                <div class="col-7">
-                    <input name="name" v-model="name" id="name-folder" placeholder="Ingrese el nombre de la carpeta">
-                </div>
-                <button class="col" :disabled="disabled">Crear</button>
-            </div>
-        </form>
     </div>
 </template>
+
 <script>
-    import axios from 'axios';
+    import {getYears, getMounths} from '../Services/dates';
+    import ajax from 'axios';
 
     export default {
-        name: "FilesTable",
-        props: ['client', 'files', 'token'],
-
+        props: ['categories'],
+        name: "FilesAll",
         data: function () {
             return {
-                filesLocal: this.files,
-                name: '',
-                url: {},
-                routeFiles: '',
-                params: {},
-                routePath: '',
-                disabled: false,
+                years: getYears(),
+                months: getMounths(),
+                category: '',
+                year: '',
+                month: '',
+                search: '',
+                files: {},
+                disabled: false
             }
-        },
-        mounted: function () {
-            this.url = new URL(window.location.href);
-            this.routeFiles = this.url.searchParams.get("route_files");
-
-            if (this.routeFiles) {
-                this.params = this.routeFiles.split('/').reduce(function (obj, str, index) {
-                    const urlAnt = (obj[index - 1]) ? obj[index - 1].url : '';
-                    obj[index] = {'name': str, 'url': urlAnt + str + '/'};
-                    return obj;
-                }, {});
-                this.routeFiles += '/'
-            } else {
-                this.routeFiles = '';
-            }
-
         },
         methods: {
-            createFile() {
-                this.disabled = true;
-                axios.post('/admin/directorios/', {
-                    '_token': this.token,
-                    'name': this.name,
-                    'path': this.client.nit + '/' + this.routeFiles,
-                }).then((response) => {
-                    this.disabled = false;
-                    this.filesLocal.push({
-                        'name': response.data.name,
-                        'path': response.data.path,
-                        'type': 'directory',
-                    });
-                    this.name = '';
-                }).catch((error) => {
-                    this.disabled = false;
-                    if (error.response.status === 422) {
-                        this.errors = error.response.data;
-                        console.log(this.errors);
+            filterFiles() {
+                this.disabled= true;
+                ajax.get('/admin/filter-products', {
+                    params: {
+                        'search': this.search,
+                        'category': this.category,
+                        'year': this.year,
+                        'month': this.month,
                     }
-                });
+                }).then((response) => {
+                    this.disabled= false;
+                    console.log(response.data)
+                    this.files = response.data
+                })
             },
             typeFile(type) {
                 const types = {
@@ -186,14 +146,8 @@
             }
         }
     }
-
 </script>
 
-<style scoped lang="scss">
-    .Crumbs {
-        a {
-            color: #FAA41B !important;
-            text-decoration: underline;
-        }
-    }
+<style scoped>
+
 </style>

@@ -48,7 +48,7 @@ class ViewFiles
         $files = $files->map(function ($item) {
             return [
                 'name' => $item->name,
-                'path' => Storage::temporaryUrl($item->path, now()->addMinutes(30)),
+                'path' => $item->path,
                 'type' => $item->extension,
                 'date' => $item->month . ' ' . $item->year,
                 'category' => $item->category->name,
