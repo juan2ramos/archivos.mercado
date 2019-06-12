@@ -28,5 +28,6 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('isAdmin', 'App\Policies\UserPolicy@isAdmin');
+        Gate::define('authorizedClient', 'App\Policies\UserPolicy@authorizedClient');
     }
 }

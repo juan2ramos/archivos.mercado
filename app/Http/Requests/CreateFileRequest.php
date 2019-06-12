@@ -29,7 +29,22 @@ class CreateFileRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'category_id' => 'required',
+            'directory' => 'required',
+            'month' => 'required',
+            'year' => 'required',
+            'path' => 'required',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'category_id.required' => 'Debes elegir una categoria',
+            'directory.required' => 'Debes elegir un directorio',
+            'month.required' => 'Debes elegir el mes',
+            'year.required' => 'Debes elegir el año',
+            'path.required' => 'Debes agregar un archivo',
         ];
     }
 

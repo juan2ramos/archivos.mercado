@@ -20,6 +20,13 @@ class CreateCategoryRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'name.required' => ''
+        ];
+    }
+
     public function createCategory()
     {
         return Category::create(['name' => $this->name]);

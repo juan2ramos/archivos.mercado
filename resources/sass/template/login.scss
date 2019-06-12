@@ -1,4 +1,7 @@
-
+.password{
+            background: url("../images/home.png");
+            background-size: cover;
+}
 .login {
   background: url("../images/home.png");
   background-size: cover;
@@ -43,4 +46,7 @@
     border-radius: .4rem;
     max-height: 4rem;
   }
+}
+.error-color{
+  color: var(--error-color)
 }

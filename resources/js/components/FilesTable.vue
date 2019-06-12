@@ -14,20 +14,36 @@
                 <thead>
                 <tr>
                     <th>Nombre</th>
+                    <th>Categoria</th>
+                    <th>Fecha</th>
                     <th class=" is-text-center">Acción</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="file in filesLocal">
+                <tr v-for="(file, index)  in filesLocal">
                     <td>
                         <div class="row middle-items">
                             <img class="m-r-20"
                                  :src=" (file.type === 'directory')
                                   ? '/images/iconcarpeta.svg': typeFile(file.type)"
                                  alt="">
-                            <span>{{file.name}}</span>
+
+                            <span v-show="!file.editing">{{file.name}}</span>
+                            <form @submit.prevent="updateFolder(file)"
+                                  v-show="file.editing" class="row middle-items  FormEdit">
+                                <input class="col-10" type="text" v-model="file.name">
+                                <div class="m-l-4  is-text-center">
+                                    <a :class="[file.updating ? 'disabled' : '', 'FormEdit-link' ] "
+                                       @click.prevent="updateFolder(file)">✓</a>
+                                </div>
+                                <div class="m-l-4   is-text-center">
+                                    <a class="FormEdit-link cancel" @click.prevent="editFolderCancel(file)">X</a>
+                                </div>
+                            </form>
                         </div>
                     </td>
+                    <td> {{file.category}}</td>
+                    <td> {{file.date}}</td>
                     <td class="row justify-center">
                         <a :href="'/admin/usuarios/' + client.nit + '?route_files=' + routeFiles + file.name"
                            class="m-r-20" v-if="file.type === 'directory'">
@@ -63,8 +79,7 @@
                                 </g>
                             </svg>
                         </a>
-                        <a v-if="file.type === 'directory'" href="">
-
+                        <a v-if="file.type === 'directory' && isFileCreated" @click.prevent="editFolder(file)">
                             <svg class="m-r-20" width="25px" height="26px" viewBox="0 0 25 26" version="1.1"
                                  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -78,7 +93,7 @@
                                 </g>
                             </svg>
                         </a>
-                        <a href="">
+                        <a v-if="isFileCreated" @click.prevent="deleteFile(file,index)" href="">
 
                             <svg width="22px" height="26px" viewBox="0 0 22 26" version="1.1"
                                  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -105,8 +120,8 @@
                 </tbody>
             </table>
         </div>
-        <form @submit.prevent="createFile()" class="Form m-t-60">
-            <h3>Crear un nuevo archivo</h3>
+        <form @submit.prevent="createFile()" v-if="isFileCreated" class="Form m-t-60">
+            <h3>Crear un nueva carpeta </h3>
             <div class="row middle-items m-t-12">
                 <label class="col-5 is-text-center" for="name-folder">Nombre de la carpeta</label>
                 <div class="col-7">
@@ -115,18 +130,25 @@
                 <button class="col" :disabled="disabled">Crear</button>
             </div>
         </form>
+        <div class="Loading " v-show="disabled">
+            <div class="spinner">
+                <div class="double-bounce1"></div>
+                <div class="double-bounce2"></div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
     import axios from 'axios';
+    import swal from 'sweetalert';
 
     export default {
         name: "FilesTable",
-        props: ['client', 'files', 'token'],
+        props: ['client', 'files', 'token', 'isFileCreated'],
 
         data: function () {
             return {
-                filesLocal: this.files,
+                filesLocal: [],
                 name: '',
                 url: {},
                 routeFiles: '',
@@ -136,19 +158,33 @@
             }
         },
         mounted: function () {
+            console.log(this.files)
             this.url = new URL(window.location.href);
             this.routeFiles = this.url.searchParams.get("route_files");
 
             if (this.routeFiles) {
-                this.params = this.routeFiles.split('/').reduce(function (obj, str, index) {
-                    const urlAnt = (obj[index - 1]) ? obj[index - 1].url : '';
-                    obj[index] = {'name': str, 'url': urlAnt + str + '/'};
+                const routeFiles = this.routeFiles.split('/');
+                this.params = routeFiles.reduce((obj, str, index) => {
+                    const urlAnt = (obj[index - 1]) ? obj[index - 1].url + '/' : '';
+                    obj[index] = {'name': str, 'url': urlAnt + str};
                     return obj;
                 }, {});
                 this.routeFiles += '/'
             } else {
                 this.routeFiles = '';
             }
+            this.filesLocal = Object.assign([], this.filesLocal, this.files.map((item) =>
+                ({
+                    'id': item.id,
+                    'name': item.name,
+                    'nameBack': item.name,
+                    'type': item.type,
+                    'date': item.date,
+                    'category': item.category,
+                    'editing': false,
+                    'updating': false,
+                    'path': item.path,
+                })))
 
         },
         methods: {
@@ -157,22 +193,61 @@
                 axios.post('/admin/directorios/', {
                     '_token': this.token,
                     'name': this.name,
-                    'path': this.client.nit + '/' + this.routeFiles,
+                    'nit': this.client.nit,
+                    'path': this.routeFiles,
                 }).then((response) => {
+
                     this.disabled = false;
                     this.filesLocal.push({
                         'name': response.data.name,
                         'path': response.data.path,
                         'type': 'directory',
+                        'nameBack': response.data.name,
+                        'editing': false,
+                        'updating': false
                     });
                     this.name = '';
                 }).catch((error) => {
                     this.disabled = false;
                     if (error.response.status === 422) {
-                        this.errors = error.response.data;
-                        console.log(this.errors);
+                        const errors = error.response.data.errors;
+                        let messages = '';
+                        for (let key in errors) {
+                            messages += errors[key] + ' ';
+                        }
+                        swal("upps algo ha sucedido", messages, "error");
                     }
                 });
+            },
+            deleteFile(file, index) {
+
+                swal({
+                    title: "Estas seguro ?",
+                    text: "Recuerda que se ya no prodrás recuper la información.",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        this.disabled = true;
+                        axios.post(`/admin/directorios/delete`, {
+                            'name': file.name,
+                            'nit': this.client.nit,
+                            'path': this.routeFiles,
+                            'id': file.id,
+                            'isDirectory': file.type === 'directory'
+                        }).then((response) => {
+                            this.disabled = false;
+                            if (response.data.success) {
+                                this.filesLocal.splice(index, 1);
+                                swal("Archivo eliminado", {icon: "success",});
+                                return
+                            }
+                            swal("Hubo un error! Vuelve a intentarlo", {icon: "error",});
+                        }).catch(() => this.disabled = false);
+                    }
+                });
+
             },
             typeFile(type) {
                 const types = {
@@ -181,9 +256,43 @@
                     jpeg: 'iconimagen.svg',
                     pdf: 'iconpdf.svg',
                     rar: 'iconrar.svg',
+                    zip: 'iconrar.svg',
                 };
                 return '/images/' + types[type]
-            }
+            },
+            updateFolder(folder) {
+                folder.updating = true;
+                this.disabled = true;
+                axios.put(`/admin/directorios/${folder.name}`, {
+                    '_token': this.token,
+                    'name': folder.name,
+                    'nameBack': folder.nameBack,
+                    'path': this.routeFiles,
+                    'nit': this.client.nit,
+                }).then((response) => {
+                    folder.editing = false;
+                    folder.name = response.data;
+                    folder.updating = false;
+                    this.disabled = false;
+                }).catch((error) => {
+                    this.disabled = false;
+                    folder.updating = false;
+                    if (error.response.status === 422) {
+                        this.errors = error.response.data;
+                        folder.name = category.nameBack;
+                        folder.editing = false;
+                        folder.updating = true;
+                    }
+                });
+            },
+            editFolderCancel(folder) {
+                folder.name = folder.nameBack;
+                folder.editing = false;
+            },
+            editFolder(folder) {
+                folder.nameBack = folder.name;
+                folder.editing = true;
+            },
         }
     }
 

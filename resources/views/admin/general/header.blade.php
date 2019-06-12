@@ -25,8 +25,12 @@
         </div>
 
         <div class="row middle-items ">
-
-            <p class="margin-0">{{auth()->user()->name}}</p>
+            <div class="row middle-items">
+                <p class="col-16 is-text-right margin-0" style="line-height: 1em">{{auth()->user()->name}}</p>
+                <i class="col-16  is-text-right" style="font-size: 11px; line-height: 1em">
+                    Último ingreso: {{auth()->user()->last_login}} - IP: {{auth()->user()->last_login_ip}}
+                </i>
+            </div>
             <a class="button Nav-logoutLarge" href="{{route('logout')}}">Cerrar sesión</a>
 
             <a href="{{route('logout')}}" class="Nav-logoutSmall m-l-20">

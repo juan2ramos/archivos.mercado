@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\ManageFiles\ViewFiles;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,6 +10,16 @@ class Client extends Model
 {
     protected $fillable = ['business_name', 'nit', 'address', 'verification_code'];
     protected $appends = ['full_nit'];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::deleting(function ($client) {
+            $client->files()->delete();
+            $viewFiles = new ViewFiles();
+            $viewFiles->removeNit($client->nit);
+        });
+    }
 
     public function getRouteKeyName()
     {
@@ -19,6 +30,7 @@ class Client extends Model
     {
         return $this->belongsTo(User::class);
     }
+
     public function files()
     {
         return $this->hasMany(File::class);
@@ -32,7 +44,7 @@ class Client extends Model
 
     public function getFullNitAttribute()
     {
-        return  "{$this->attributes['nit']} - {$this->attributes['verification_code']}";
+        return "{$this->attributes['nit']} - {$this->attributes['verification_code']}";
 
     }
 

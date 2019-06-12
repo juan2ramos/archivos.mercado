@@ -8,7 +8,6 @@ export default function (token) {
     return new Dropzone('.dropzone', {
         url: '/admin/archivos/uploadFileTemp',
         headers: {'X-CSRF-TOKEN': token},
-        acceptedFiles: 'image/*,application/pdf',
         paramName: 'files',
         maxFiles: 1,
         dictDefaultMessage: '<img src="/../images/iconarrastre.png" alt="">' +

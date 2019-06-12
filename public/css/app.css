@@ -3077,6 +3077,69 @@ tr:nth-child(2n) {
   background: #f7fbf9;
 }
 
+.Loading {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  min-width: 100vw;
+  min-height: 100vh;
+  background: #ffffff75;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  margin: 100px auto;
+}
+
+.double-bounce1,
+.double-bounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #333;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-animation: sk-bounce 2s infinite ease-in-out;
+  animation: sk-bounce 2s infinite ease-in-out;
+}
+
+.double-bounce2 {
+  -webkit-animation-delay: -1s;
+  animation-delay: -1s;
+}
+
+@-webkit-keyframes sk-bounce {
+  0%, 100% {
+    -webkit-transform: scale(0);
+  }
+
+  50% {
+    -webkit-transform: scale(1);
+  }
+}
+
+@keyframes sk-bounce {
+  0%, 100% {
+    transform: scale(0);
+    -webkit-transform: scale(0);
+  }
+
+  50% {
+    transform: scale(1);
+    -webkit-transform: scale(1);
+  }
+}
+
 .Nav {
   background: var(--primary-color);
   min-height: 100vh;
@@ -3236,6 +3299,11 @@ tr:nth-child(2n) {
   display: block;
 }
 
+.password {
+  background: url(/images/home.png?0331db2846320a4e683be73a8a99f4df);
+  background-size: cover;
+}
+
 .login {
   background: url(/images/home.png?0331db2846320a4e683be73a8a99f4df);
   background-size: cover;
@@ -3283,6 +3351,10 @@ tr:nth-child(2n) {
   font-weight: 700;
   border-radius: 0.4rem;
   max-height: 4rem;
+}
+
+.error-color {
+  color: var(--error-color);
 }
 
 .Header {

@@ -22,13 +22,33 @@ class CreateClientRequest extends FormRequest
         return [
             'name' => 'required',
             'email' => ['required', 'email', 'unique:users,email'],
-            'password' => 'required',
+            'password' => 'required|min:8',
             'business_name' => 'required',
-            'verification_code' => 'required','numeric',
-            'nit' => ['required','numeric',  Rule::unique('clients')],
+            'verification_code' => 'required', 'numeric',
+            'nit' => ['required', 'numeric', Rule::unique('clients')],
             'address' => 'required',
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'El nombre es requerido.',
+            'email.required' => 'El email es requerido',
+            'email.email' => 'El email debe ser válido',
+            'email.unique' => 'El email ya esta en uso',
+            'password.required' => 'La contraseña es requerida',
+            'business_name.required' => 'La razón social es requerido',
+            'verification_code.required' => 'El código de verificación es requerido',
+            'verification_code.numeric' => 'El código debe ser numérico',
+            'nit.required' => 'El NIT es requerido',
+            'nit.numeric' => 'El NIT debe ser numérico',
+            'nit.unique' => 'El NIT ya esta en uso',
+            'address.required' => 'La dirección es requerida',
+            'password.min' => 'La contraseña debe tener mínimo 8 carácteres ',
+        ];
+    }
+
     public function createClient()
     {
         DB::transaction(function () {

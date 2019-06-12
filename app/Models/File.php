@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\ManageFiles\ViewFiles;
 
 class File extends Model
 {
@@ -13,6 +15,7 @@ class File extends Model
     {
         return Storage::temporaryUrl($value, now()->addMinutes(30));
     }
+
 
     public function scopeSearch($query, $search)
     {
@@ -25,6 +28,9 @@ class File extends Model
             $query->whereHas('category', function ($query) use ($search) {
                 $query->where('id', $search->get('category'));
             });
+        if (!Auth::user()->isAdmin())
+            $query->where('client_id', Auth::user()->client->id);
+
         $query->with('category');
         return $query->limit(10)->get();
     }
@@ -32,5 +38,24 @@ class File extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::deleting(function ($file) {
+            $viewFiles = new ViewFiles();
+            $viewFiles->deleteFile($file->url);
+        });
+    }
+
+    public function getUrlAttribute()
+    {
+        return $this->attributes['path'];
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
     }
 }

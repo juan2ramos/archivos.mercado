@@ -1,17 +1,23 @@
 @extends('layouts.app')
 @section('title','Dashboard')
 @section('content')
-    @if ($errors->any())
-        <div class="alert-error m-b-32">
-            <span>¡Tienes error en el formulario! revisa los campos</span>
-        </div>
-    @endif
+
     @if (session('success'))
         <div class="alert-success">
             <span>{{session('success')}}</span>
         </div>
     @endif
+
     <div class="container">
+        @if($errors->any())
+            <div class="row alert-error p-b-20">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{$error}}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <h2 class="m-b-28">DATOS NUEVO USUARIO</h2>
         <form action="{{route('users.store')}}" method="post" class="row Form">
             @csrf
@@ -56,6 +62,7 @@
                                placeholder="Número de NIT" class="col-10">
                         <span class="col">-</span>
                         <input type="text" class="col-5" name="verification_code"
+                               value="{{old('verification_code')}}"
                                style="padding: 0" placeholder="CV">
                     </div>
                 </div>

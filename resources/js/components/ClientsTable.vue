@@ -15,7 +15,7 @@
                 <td>{{client.user.email}}</td>
                 <td>{{client.full_nit}}</td>
                 <td class="row justify-center middle-items">
-                    <a @click.prevent="alert(client.id, index)" class="m-r-16">
+                    <a @click.prevent="alert(client.nit, index)" class="m-r-16">
                         <svg width="25px" height="25px" viewBox="0 0 25 25" version="1.1"
                              xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -87,7 +87,7 @@
             }
         },
             methods: {
-            alert: function (idClient, index) {
+            alert: function (nit, index) {
                 swal({
                     title: "Estas seguro ?",
                     text: "Recuerda que se ya no prodrás recuper la información.",
@@ -97,9 +97,10 @@
                 }).then((willDelete) => {
 
                     if (willDelete) {
-                        axios.delete('usuarios/' + idClient, {
+                        axios.delete('/admin/usuarios/' + nit, {
                             _token: this.token
                         }).then((response) => {
+                            console.log(response.data)
                             if (response.data.success) {
                                 this.clientsLocal.splice(index, 1);
                                 swal("usuario Eliminado eliminado", {icon: "success",});

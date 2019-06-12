@@ -8,10 +8,16 @@ use App\ManageFiles\ViewFiles;
 use App\Models\Category;
 use App\Models\Client;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:isAdmin')->except('show', 'filesByClient');
+    }
 
     public function index(Request $request)
     {
@@ -35,13 +41,18 @@ class ClientController extends Controller
     public function show(Client $client, ViewFiles $viewFiles)
     {
 
-        $files = $viewFiles->clientFiles($client);
+        $isFileCreated = Auth::user()->isAdmin();
 
+        if (!$isFileCreated && Gate::denies('authorizedClient', $client)) {
+            return redirect()->route('dashboard');
+        }
+
+        $files = $viewFiles->clientFiles($client);
         if (request()->isJson()) {
             return $files;
         }
 
-        return view('admin.users.show', compact('client', 'files'));
+        return view('admin.users.show', compact('client', 'files', 'isFileCreated'));
     }
 
     public function edit(Client $client)
@@ -49,14 +60,20 @@ class ClientController extends Controller
         return view('admin.users.edit', compact('client'));
     }
 
-    public function update(UpdateClientRequest $request, Client $client)
+    public function update(UpdateClientRequest $request, Client $client, ViewFiles $viewFiles)
     {
-        $client = $request->updateClient();
+        $client = $request->updateClient($viewFiles);
+
         return redirect()->route('users.edit', $client->nit)->with(['success' => 'Usuario actulizado']);
     }
 
-    public function destroy($id)
+    public function destroy(Client $client)
     {
+        if (Gate::denies('isAdmin')) {
+            abort(404);
+        }
+        $client->delete();
+
         return ['success' => true];
     }
 
@@ -66,6 +83,14 @@ class ClientController extends Controller
         $directories = $viewFiles->directories($client->nit);
 
         return view('admin.users.uploadFile', compact('client', 'categories', 'directories'));
+    }
+
+    public function filesByClient(ViewFiles $viewFiles)
+    {
+
+        $client = Auth::user()->client;
+        return $this->show($client, $viewFiles);
+
     }
 
 }

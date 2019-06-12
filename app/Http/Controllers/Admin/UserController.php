@@ -3,20 +3,23 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\UpdateUserRequest;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\ManageFiles\ViewFiles;
 
 class UserController extends Controller
 {
 
     public function index()
     {
-        return view('admin.users.profile', ['user' => Auth::user()]);
+        $user = auth()->user()->load('client');
+
+        return view('admin.users.profile', compact('user'));
     }
 
-    public function update(UpdateUserRequest $request)
+    public function update(UpdateUserRequest $request, ViewFiles $viewFiles)
     {
-        $request->updateUser();
-        return back()->with(['success' => true]);
+
+        $request->updateUser($viewFiles);
+        return back()->with(['success' => 'Usuario actualizado correctamente']);
     }
 }

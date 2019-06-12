@@ -18,17 +18,18 @@ class CreateDirectoryRequest extends FormRequest
 
     public function rules()
     {
+        $nit = $this->get('nit') . '/';
         return [
             'name' => 'required',
-            'path' => ['required',
-                function ($attribute, $value, $fail) {
-                    if (!Storage::exists($this->getRootDirectory() . $value)) {
+            'path' => ['',
+                function ($attribute, $value, $fail) use ($nit) {
+                    if (!Storage::exists($this->getRootDirectory() . $nit . $value)) {
                         $fail('La ruta para la carpeta no existe');
                     }
                 },
-                function ($attribute, $value, $fail) {
-                    if (Storage::exists($this->getRootDirectory() . $value . '/'. $this->get('name'))) {
-                       $fail('La carpeta ya existe');
+                function ($attribute, $value, $fail) use ($nit) {
+                    if (Storage::exists($this->getRootDirectory() . $nit . $value . '/' . $this->get('name'))) {
+                        $fail('La carpeta ya existe');
                     }
                 },
             ],
@@ -38,7 +39,8 @@ class CreateDirectoryRequest extends FormRequest
     public function createDirectory()
     {
         $name = Str::slug($this->get('name'));
-        $directoryRoute = $this->getRootDirectory() . $this->get('path') . '/' . $name;
+        $nit = $this->get('nit');
+        $directoryRoute = $this->getRootDirectory() . $nit . '/' .$this->get('path')  . $name;
         if (Storage::makeDirectory($directoryRoute)) {
             return [
                 'name' => $name,
@@ -47,6 +49,12 @@ class CreateDirectoryRequest extends FormRequest
         }
 
         return abort(422, 'No se pudo crear el directorio');
+    }
+
+    public function updateDirectory(ViewFiles $viewFiles)
+    {
+        $this['name'] = Str::slug($this->get('name'));
+        return $viewFiles->updateDirectory($this->all());
     }
 
     private function getRootDirectory()

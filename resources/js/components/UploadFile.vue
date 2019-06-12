@@ -1,5 +1,5 @@
 <template>
-    <form class="Form row" action="/admin/archivos" method="post">
+    <form class="Form row" @submit="save" action="/admin/archivos" method="post">
         <div class="col-8 p-l-12">
             <div class="row middle-items m-t-12">
                 <label class="col-6 is-text-center" for="category_id">Categoría</label>
@@ -50,6 +50,12 @@
         <input type="hidden" name="name" :value="name">
         <input type="hidden" name="client_id" :value="client.id">
         <input type="hidden" name="_token" :value="token">
+        <div class="Loading " v-show="disabledButton">
+            <div class="spinner">
+                <div class="double-bounce1"></div>
+                <div class="double-bounce2"></div>
+            </div>
+        </div>
     </form>
 </template>
 
@@ -91,8 +97,12 @@
                 swal("Solo se permite un archivo", {icon: "warning",});
                 this.disabledButton = false
             });
-            //this.dropZone.on('removedfile', (file) => destroyFile(file.id_number));
+
         },
-        methods: {}
+        methods: {
+            save() {
+                this.disabledButton = true
+            }
+        }
     }
 </script>

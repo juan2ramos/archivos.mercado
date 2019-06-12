@@ -2,48 +2,67 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\ManageFiles\ViewFiles;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class UpdateUserRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
+    private $user;
+
     public function authorize()
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
-        return [
+        $this->user = Auth::user();
+        $rules = [
             'name' => 'required',
             'email' => [
                 'required', 'email',
-                Rule::unique('users')->ignore(Auth::user())
+                Rule::unique('users')->ignore($this->user)
             ],
             'password' => '',
         ];
+        if (!$this->user->isAdmin()) {
+            $rules += [
+                'business_name' => 'required',
+                'verification_code' => 'required', 'numeric',
+                'nit' => [
+                    'required', 'numeric',
+                     Rule::unique('clients')->ignore($this->user->client)
+                ],
+                'address' => 'required',
+            ];
+        }
+        return $rules;
     }
-    public function updateUser(){
 
-        $user = Auth::user();
-        $user->fill([
+    public function updateUser(ViewFiles $viewFiles)
+    {
+
+        $this->user->fill([
             'name' => $this->name,
             'email' => $this->email
         ]);
         if ($this->password != null) {
-            $user->password = bcrypt($this->password);
+            $this->user->password = bcrypt($this->password);
         }
-        $user->save();
+        $this->user->save();
+        if (!$this->user->isAdmin()) {
+
+            $this->user->client()->update([
+                'business_name' => $this->business_name,
+                'nit' => $this->nit,
+                'verification_code' => $this->verification_code,
+                'address' => $this->address,
+            ]);
+            if ($this->nit != Auth::user()->client->nit) {
+                $viewFiles->updateNit(['nit' => $this->nit, 'nameBack' => $this->user->client->nit]);
+            }
+        }
     }
 }

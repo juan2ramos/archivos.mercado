@@ -1,6 +1,9 @@
 
-    <div class="row justify-between-m justify-center BarTop middle-items">
-        <div>
+    <div class="row justify-between-m justify-center BarTop middle-items ">
+        <div style="min-height: 44px;">
+            @if (auth()->user()->isAdmin())
+
+
             <a href="{{route('client.uploadFile', $client->nit)}}" class="row middle-items BarTop-link">
                 <svg width="19px" height="25px" viewBox="0 0 19 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -17,9 +20,10 @@
                 </svg>
                 <span class="BarTop-span">Añadir archivo</span>
             </a>
+            @endif
         </div>
-        <form action="{{route('files.index')}}" method="get" class="row BarTop-form ">
-            <input type="search" placeholder="Buscar" name="search" class="BarTop-input">
+        <form action="{{route('filterFiles')}}" method="get" class="row BarTop-form">
+            <input  type="search" placeholder="Buscar" name="search" class="BarTop-input ">
             <button type="submit" class="BarTop-button">
                 <svg width="21px" height="21px" viewBox="0 0 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg"
                      xmlns:xlink="http://www.w3.org/1999/xlink">
