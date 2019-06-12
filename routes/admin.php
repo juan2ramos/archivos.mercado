@@ -27,6 +27,12 @@ Route::post('archivos/downloadFile', 'FileController@downloadFile')
 Route::get('usuarios/{client}/subir-archivo', 'ClientController@uploadFile')
     ->middleware('can:isAdmin')->name('client.uploadFile');
 
+Route::get('usuarios/crear/admin','UserController@createAdmin')
+    ->middleware('can:isAdmin')->name('users.create.admin');
+
+Route::post('usuarios/crear/admin','UserController@storeAdmin')
+    ->middleware('can:isAdmin')->name('users.store.admin');
+
 Route::get('filter-products', 'FileController@filterProducts')->name('files.filter');
 
 Route::get('perfil', 'UserController@index')->name('profile');

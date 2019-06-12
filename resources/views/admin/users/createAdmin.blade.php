@@ -4,7 +4,7 @@
 
     @if (session('success'))
         <div class="alert-success">
-            <span>{{session('success')}}</span>
+            <span>¡El usuario administrador ha sido creado!</span>
         </div>
     @endif
 
@@ -19,10 +19,10 @@
             </div>
         @endif
         <div class="row justify-between">
-            <h2 class="m-b-28">DATOS NUEVO USUARIO</h2>
-            <div><a href="{{route('users.create.admin')}}" class="button" style="padding: 6px 16px !important;">Crear usuario administrador</a></div>
+            <h2 class="m-b-28">DATOS USUARIO ADMIN</h2>
+            <div><a href="{{route('users.create')}}" class="button" style="padding: 6px 16px !important;">Crear usuario cliente</a></div>
         </div>
-        <form action="{{route('users.store')}}" method="post" class="row Form">
+        <form action="{{route('users.store.admin')}}" method="post" class="row Form">
             @csrf
             <div class="col-8 p-r-12">
                 <h3>DATOS PERSONALES</h3>
@@ -47,36 +47,6 @@
                                placeholder="Generar contraseña">
                     </div>
                 </div>
-            </div>
-            <div class="col-8 p-l-12">
-                <h3>DATOS DE LA EMPRESA</h3>
-                <div class="row middle-items m-t-12">
-                    <label class="col-6 is-text-center" for="business_name">Razón social</label>
-                    <div class="col-10">
-                        <input autocomplete="off" type="text" value="{{old('business_name')}}"
-                               name="business_name" id="business_name"
-                               placeholder="Nombre de la empresa">
-                    </div>
-                </div>
-                <div class="row middle-items m-t-12">
-                    <label class="col-6 is-text-center" for="nit">NIT</label>
-                    <div class="col-10 row middle-items">
-                        <input autocomplete="off" type="text" name="nit" id="nit" value="{{old('nit')}}"
-                               placeholder="Número de NIT" class="col-10">
-                        <span class="col">-</span>
-                        <input type="text" class="col-5" name="verification_code"
-                               value="{{old('verification_code')}}"
-                               style="padding: 0" placeholder="CV">
-                    </div>
-                </div>
-                <div class="row middle-items m-t-12">
-                    <label class="col-6 is-text-center" for="address">Dirección</label>
-                    <div class="col-10">
-                        <input autocomplete="off" type="text" value="{{old('address')}}"
-                               name="address" id="address" placeholder="Dirección de la empresa">
-                    </div>
-                </div>
-
             </div>
             <div class="row justify-center m-t-36 is-text-center is-full-width">
                 <button type="submit">Crear usuario</button>
