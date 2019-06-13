@@ -3,8 +3,8 @@
         <form @submit.prevent="createFile()" class="Form m-b-60">
             <h3>Crear categoria </h3>
             <div class="row middle-items m-t-12">
-                <label class="col-5 is-text-center" for="name-folder">Nombre de la categoria</label>
-                <div class="col-7">
+                <label class="col-m-5 col-16 is-text-center" for="name-folder">Nombre de la categoria</label>
+                <div class="col-m-7  col-16 " >
                     <input name="name" v-model="name" id="name-folder" placeholder="Ingrese el nombre de la categoria">
                 </div>
                 <button class="col" :disabled="disabled">Crear</button>

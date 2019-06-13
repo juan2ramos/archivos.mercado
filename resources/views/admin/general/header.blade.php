@@ -27,7 +27,7 @@
         <div class="row middle-items ">
             <div class="row middle-items">
                 <p class="col-16 is-text-right margin-0" style="line-height: 1em">{{auth()->user()->name}}</p>
-                <i class="col-16  is-text-right" style="font-size: 11px; line-height: 1em">
+                <i class="col-16  is-text-right hide-phone" style="font-size: 11px; line-height: 1em">
                     Último ingreso: {{auth()->user()->last_login}} - IP: {{auth()->user()->last_login_ip}}
                 </i>
             </div>

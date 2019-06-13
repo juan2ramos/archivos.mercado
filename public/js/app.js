@@ -7517,13 +7517,13 @@ var render = function() {
           _c(
             "label",
             {
-              staticClass: "col-5 is-text-center",
+              staticClass: "col-m-5 col-16 is-text-center",
               attrs: { for: "name-folder" }
             },
             [_vm._v("Nombre de la categoria")]
           ),
           _vm._v(" "),
-          _c("div", { staticClass: "col-7" }, [
+          _c("div", { staticClass: "col-m-7  col-16 " }, [
             _c("input", {
               directives: [
                 {
@@ -8252,161 +8252,179 @@ var render = function() {
             }
           },
           [
-            _c("label", { staticClass: "col-5 m-r-8", attrs: { for: "" } }, [
-              _c("input", {
-                directives: [
+            _c(
+              "label",
+              { staticClass: "col-16 col-5 m-r-8", attrs: { for: "" } },
+              [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.search,
+                      expression: "search"
+                    }
+                  ],
+                  staticClass: "row",
+                  attrs: {
+                    type: "search",
+                    placeholder: "Por nombre",
+                    name: "search"
+                  },
+                  domProps: { value: _vm.search },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.search = $event.target.value
+                    }
+                  }
+                })
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "label",
+              { staticClass: "col-16 col-m-3 m-r-8", attrs: { for: "" } },
+              [
+                _c(
+                  "select",
                   {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.search,
-                    expression: "search"
-                  }
-                ],
-                staticClass: "row",
-                attrs: {
-                  type: "search",
-                  placeholder: "Por nombre",
-                  name: "search"
-                },
-                domProps: { value: _vm.search },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.category,
+                        expression: "category"
+                      }
+                    ],
+                    attrs: { name: "", id: "" },
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.category = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      }
                     }
-                    _vm.search = $event.target.value
-                  }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c("label", { staticClass: "col-3 m-r-8", attrs: { for: "" } }, [
-              _c(
-                "select",
-                {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.category,
-                      expression: "category"
-                    }
+                  },
+                  [
+                    _c("option", { attrs: { value: "" } }, [
+                      _vm._v("Por Categoria")
+                    ]),
+                    _vm._v(" "),
+                    _vm._l(_vm.categories, function(category) {
+                      return _c(
+                        "option",
+                        { domProps: { value: category.id } },
+                        [_vm._v(_vm._s(category.name))]
+                      )
+                    })
                   ],
-                  attrs: { name: "", id: "" },
-                  on: {
-                    change: function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.category = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
-                    }
-                  }
-                },
-                [
-                  _c("option", { attrs: { value: "" } }, [
-                    _vm._v("Por Categoria")
-                  ]),
-                  _vm._v(" "),
-                  _vm._l(_vm.categories, function(category) {
-                    return _c("option", { domProps: { value: category.id } }, [
-                      _vm._v(_vm._s(category.name))
-                    ])
-                  })
-                ],
-                2
-              )
-            ]),
+                  2
+                )
+              ]
+            ),
             _vm._v(" "),
-            _c("label", { staticClass: "col-2 m-r-8", attrs: { for: "" } }, [
-              _c(
-                "select",
-                {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.year,
-                      expression: "year"
+            _c(
+              "label",
+              { staticClass: "col-m-2 col-16  m-r-8", attrs: { for: "" } },
+              [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.year,
+                        expression: "year"
+                      }
+                    ],
+                    attrs: { name: "year", id: "year" },
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.year = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      }
                     }
+                  },
+                  [
+                    _c("option", { attrs: { value: "" } }, [_vm._v("Por año")]),
+                    _vm._v(" "),
+                    _vm._l(_vm.years, function(year) {
+                      return _c("option", { domProps: { value: year } }, [
+                        _vm._v(_vm._s(year))
+                      ])
+                    })
                   ],
-                  attrs: { name: "year", id: "year" },
-                  on: {
-                    change: function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.year = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
-                    }
-                  }
-                },
-                [
-                  _c("option", { attrs: { value: "" } }, [_vm._v("Por año")]),
-                  _vm._v(" "),
-                  _vm._l(_vm.years, function(year) {
-                    return _c("option", { domProps: { value: year } }, [
-                      _vm._v(_vm._s(year))
-                    ])
-                  })
-                ],
-                2
-              )
-            ]),
+                  2
+                )
+              ]
+            ),
             _vm._v(" "),
-            _c("label", { staticClass: "col-3 m-r-8", attrs: { for: "" } }, [
-              _c(
-                "select",
-                {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.month,
-                      expression: "month"
+            _c(
+              "label",
+              { staticClass: "col-m-3 col-16 m-r-8", attrs: { for: "" } },
+              [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.month,
+                        expression: "month"
+                      }
+                    ],
+                    attrs: { name: "month", id: "months" },
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.month = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      }
                     }
+                  },
+                  [
+                    _c("option", { attrs: { value: "" } }, [_vm._v("Por mes")]),
+                    _vm._v(" "),
+                    _vm._l(_vm.months, function(month) {
+                      return _c("option", { domProps: { value: month } }, [
+                        _vm._v(_vm._s(month))
+                      ])
+                    })
                   ],
-                  attrs: { name: "month", id: "months" },
-                  on: {
-                    change: function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.month = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
-                    }
-                  }
-                },
-                [
-                  _c("option", { attrs: { value: "" } }, [_vm._v("Por mes")]),
-                  _vm._v(" "),
-                  _vm._l(_vm.months, function(month) {
-                    return _c("option", { domProps: { value: month } }, [
-                      _vm._v(_vm._s(month))
-                    ])
-                  })
-                ],
-                2
-              )
-            ]),
+                  2
+                )
+              ]
+            ),
             _vm._v(" "),
             _c(
               "button",
@@ -8422,7 +8440,7 @@ var render = function() {
     ),
     _vm._v(" "),
     Object.keys(_vm.files).length !== 0 && _vm.files.constructor !== Object
-      ? _c("div", { staticClass: "m-t-24" }, [
+      ? _c("div", { staticClass: "m-t-24 table-container" }, [
           _c("table", {}, [
             _vm._m(0),
             _vm._v(" "),
@@ -8651,7 +8669,7 @@ var render = function() {
       2
     ),
     _vm._v(" "),
-    _c("div", [
+    _c("div", { staticClass: "m-t-24 table-container" }, [
       _c("table", {}, [
         _vm._m(0),
         _vm._v(" "),
@@ -9171,13 +9189,13 @@ var render = function() {
               _c(
                 "label",
                 {
-                  staticClass: "col-5 is-text-center",
+                  staticClass: "col-m-5 col-16 is-text-center",
                   attrs: { for: "name-folder" }
                 },
                 [_vm._v("Nombre de la carpeta")]
               ),
               _vm._v(" "),
-              _c("div", { staticClass: "col-7" }, [
+              _c("div", { staticClass: "col-m-7  col-16" }, [
                 _c("input", {
                   directives: [
                     {
@@ -9399,7 +9417,7 @@ var render = function() {
       on: { submit: _vm.save }
     },
     [
-      _c("div", { staticClass: "col-8 p-l-12" }, [
+      _c("div", { staticClass: "col-m-8 col-16 p-l-12" }, [
         _c("div", { staticClass: "row middle-items m-t-12" }, [
           _c(
             "label",
@@ -9461,7 +9479,7 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-8 p-l-12" }, [
+      _c("div", { staticClass: "col-m-8 col-16 p-l-12" }, [
         _c("div", { staticClass: "row middle-items m-t-12" }, [
           _c(
             "label",

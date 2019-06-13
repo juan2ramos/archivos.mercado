@@ -12,6 +12,7 @@
 
   &.open {
     transform: translateX(22rem);
+    z-index: 1;
     @include respond-to(medium) {
       transform: translateX(0);
     }

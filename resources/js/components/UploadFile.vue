@@ -1,6 +1,6 @@
 <template>
     <form class="Form row" @submit="save" action="/admin/archivos" method="post">
-        <div class="col-8 p-l-12">
+        <div class="col-m-8 col-16 p-l-12">
             <div class="row middle-items m-t-12">
                 <label class="col-6 is-text-center" for="category_id">Categoría</label>
                 <div class="col-10">
@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-8 p-l-12">
+        <div class="col-m-8 col-16 p-l-12">
             <div class="row middle-items m-t-12">
                 <label class="col-6 is-text-center" for="months">Mes</label>
                 <div class="col-10">

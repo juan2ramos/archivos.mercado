@@ -24,7 +24,7 @@
         </div>
         <form action="{{route('users.store.admin')}}" method="post" class="row Form">
             @csrf
-            <div class="col-8 p-r-12">
+            <div class="col-m-8 col-16  p-r-12">
                 <h3>DATOS PERSONALES</h3>
                 <div class="row middle-items m-t-12">
                     <label class="col-6 is-text-center" for="name">Nombre</label>

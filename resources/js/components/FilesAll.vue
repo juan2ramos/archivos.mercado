@@ -2,22 +2,22 @@
     <div>
         <div class="row justify-between-m justify-center BarTop middle-items p-8">
             <form action="" @submit.prevent="filterFiles()" method="get" class="row col ">
-                <label for="" class="col-5 m-r-8">
+                <label for="" class="col-16 col-5 m-r-8">
                     <input type="search" v-model="search" placeholder="Por nombre" name="search" class="row">
                 </label>
-                <label for="" class="col-3 m-r-8">
+                <label for="" class="col-16 col-m-3 m-r-8">
                     <select name="" id="" v-model="category">
                         <option value="">Por Categoria</option>
                         <option v-for="category in categories" :value="category.id">{{category.name}}</option>
                     </select>
                 </label>
-                <label for="" class="col-2 m-r-8">
+                <label for="" class="col-m-2 col-16  m-r-8">
                     <select name="year" id="year" v-model="year">
                         <option value="">Por año</option>
                         <option v-for="year in years" :value="year">{{year}}</option>
                     </select>
                 </label>
-                <label for="" class="col-3 m-r-8">
+                <label for="" class="col-m-3 col-16 m-r-8">
                     <select name="month" id="months" v-model="month">
                         <option value="">Por mes</option>
                         <option v-for="month in months" :value="month">{{month}}</option>
@@ -28,7 +28,7 @@
             </form>
 
         </div>
-        <div class="m-t-24" v-if="Object.keys(files).length !== 0 && files.constructor !== Object">
+        <div class="m-t-24 table-container" v-if="Object.keys(files).length !== 0 && files.constructor !== Object">
             <table class="">
                 <thead>
                 <tr>

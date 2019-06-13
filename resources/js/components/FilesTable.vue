@@ -9,7 +9,7 @@
                 </a>
             </span>
         </div>
-        <div>
+        <div class="m-t-24 table-container">
             <table class="">
                 <thead>
                 <tr>
@@ -123,8 +123,8 @@
         <form @submit.prevent="createFile()" v-if="isFileCreated" class="Form m-t-60">
             <h3>Crear un nueva carpeta </h3>
             <div class="row middle-items m-t-12">
-                <label class="col-5 is-text-center" for="name-folder">Nombre de la carpeta</label>
-                <div class="col-7">
+                <label class="col-m-5 col-16 is-text-center" for="name-folder">Nombre de la carpeta</label>
+                <div class="col-m-7  col-16">
                     <input name="name" v-model="name" id="name-folder" placeholder="Ingrese el nombre de la carpeta">
                 </div>
                 <button class="col" :disabled="disabled">Crear</button>

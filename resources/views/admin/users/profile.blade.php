@@ -21,7 +21,7 @@
         <h2 class="m-b-28">TUS DATOS</h2>
         <form action="{{route('profile.update')}}" method="post" class="row Form" autocomplete="off">
             @csrf
-            <div class="col-8 p-r-12">
+            <div class="col-m-8 col-16 p-r-12">
                 <h3>DATOS PERSONALES</h3>
                 <div class="row middle-items m-t-12">
                     <label class="col-6 is-text-center" for="name">Nombre</label>
@@ -46,7 +46,7 @@
                 </div>
             </div>
             @if (!auth()->user()->isAdmin())
-                <div class="col-8 p-l-12">
+                <div class="col-m-8 col-16  p-l-12">
                     <h3>DATOS DE LA EMPRESA</h3>
                     <div class="row middle-items m-t-12">
                         <label class="col-6 is-text-center" for="business_name">Razón social</label>

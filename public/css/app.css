@@ -3158,6 +3158,7 @@ tr:nth-child(2n) {
 .Nav.open {
   -webkit-transform: translateX(22rem);
           transform: translateX(22rem);
+  z-index: 1;
 }
 
 @media (min-width: 720px) {
