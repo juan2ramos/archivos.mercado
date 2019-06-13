@@ -2,7 +2,7 @@
     <div>
         <div class="row justify-between-m justify-center BarTop middle-items p-8">
             <form action="" @submit.prevent="filterFiles()" method="get" class="row col ">
-                <label for="" class="col-16 col-5 m-r-8">
+                <label for="" class="col-16 col-m-5 m-r-8">
                     <input type="search" v-model="search" placeholder="Por nombre" name="search" class="row">
                 </label>
                 <label for="" class="col-16 col-m-3 m-r-8">

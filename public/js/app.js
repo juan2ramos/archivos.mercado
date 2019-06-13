@@ -8254,7 +8254,7 @@ var render = function() {
           [
             _c(
               "label",
-              { staticClass: "col-16 col-5 m-r-8", attrs: { for: "" } },
+              { staticClass: "col-16 col-m-5 m-r-8", attrs: { for: "" } },
               [
                 _c("input", {
                   directives: [
