@@ -24,7 +24,6 @@ class CreateClientRequest extends FormRequest
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => 'required|min:8',
             'business_name' => 'required',
-            'verification_code' => 'required', 'numeric',
             'nit' => ['required', 'numeric', Rule::unique('clients')],
             'address' => 'required',
         ];
@@ -39,8 +38,6 @@ class CreateClientRequest extends FormRequest
             'email.unique' => 'El email ya esta en uso',
             'password.required' => 'La contraseña es requerida',
             'business_name.required' => 'La razón social es requerido',
-            'verification_code.required' => 'El código de verificación es requerido',
-            'verification_code.numeric' => 'El código debe ser numérico',
             'nit.required' => 'El NIT es requerido',
             'nit.numeric' => 'El NIT debe ser numérico',
             'nit.unique' => 'El NIT ya esta en uso',
@@ -62,7 +59,6 @@ class CreateClientRequest extends FormRequest
             $user->client()->create([
                 'business_name' => $this->business_name,
                 'nit' => $this->nit,
-                'verification_code' => $this->verification_code,
                 'address' => $this->address,
             ]);
             Storage::makeDirectory("mercado/$this->nit");

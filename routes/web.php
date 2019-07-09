@@ -13,8 +13,8 @@
 
 Route::get('/', 'HomeController@index');
 
-Auth::routes(['register' => false]);
+Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('home', 'Admin\HomeController@toValidate')->name('toValidate');
 
 Route::get('cerrar-sesion', 'Auth\LoginController@logout')->name('logout');

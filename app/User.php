@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\Client;
+use App\Notifications\CustomResetPasswordNotification;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,8 +13,13 @@ class User extends Authenticatable
 {
     use Notifiable, HasRoles;
 
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new CustomResetPasswordNotification($token));
+    }
+
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','validate'
     ];
 
     protected $hidden = [
@@ -32,6 +38,11 @@ class User extends Authenticatable
     public function isSuperAdmin()
     {
         return $this->hasRole('SuperAdmin');
+    }
+
+    public function isClient()
+    {
+        return $this->hasRole('Client');
     }
 
     public function client()

@@ -32,7 +32,7 @@ class UpdateClientRequest extends FormRequest
             'business_name' => 'required',
             'nit' => ['required', 'numeric', Rule::unique('clients')->ignore($this->client)],
             'password' => 'nullable|min:8',
-            'verification_code' => 'required', 'numeric',
+
             'address' => 'required',
         ];
     }
@@ -48,8 +48,6 @@ class UpdateClientRequest extends FormRequest
             'nit.numeric' => 'El NIT debe ser numérico',
             'nit.unique' => 'El NIT ya esta en uso',
             'password.min' => 'La contraseña debe tener mínimo 8 carácteres ',
-            'verification_code.required' => 'El código de verificación es requerido',
-            'verification_code.numeric' => 'El código debe ser numérico',
             'address.required' => 'La dirección es requerida',
         ];
 
@@ -64,7 +62,6 @@ class UpdateClientRequest extends FormRequest
         $client = $this->client->fill([
             'business_name' => $this->business_name,
             'nit' => $this->nit,
-            'verification_code' => $this->verification_code,
             'address' => $this->address,
         ]);
 

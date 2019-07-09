@@ -63,10 +63,6 @@
                     <div class="col-10 row middle-items">
                         <input autocomplete="off" type="text" name="nit" id="nit" value="{{old('nit')}}"
                                placeholder="Número de NIT" class="col-10">
-                        <span class="col">-</span>
-                        <input type="text" class="col-5" name="verification_code"
-                               value="{{old('verification_code')}}"
-                               style="padding: 0" placeholder="CV">
                     </div>
                 </div>
                 <div class="row middle-items m-t-12">

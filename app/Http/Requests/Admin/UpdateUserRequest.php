@@ -27,17 +27,7 @@ class UpdateUserRequest extends FormRequest
             ],
             'password' => '',
         ];
-        if (!$this->user->isAdmin()) {
-            $rules += [
-                'business_name' => 'required',
-                'verification_code' => 'required', 'numeric',
-                'nit' => [
-                    'required', 'numeric',
-                     Rule::unique('clients')->ignore($this->user->client)
-                ],
-                'address' => 'required',
-            ];
-        }
+
         return $rules;
     }
 
@@ -52,17 +42,7 @@ class UpdateUserRequest extends FormRequest
             $this->user->password = bcrypt($this->password);
         }
         $this->user->save();
-        if (!$this->user->isAdmin()) {
 
-            $this->user->client()->update([
-                'business_name' => $this->business_name,
-                'nit' => $this->nit,
-                'verification_code' => $this->verification_code,
-                'address' => $this->address,
-            ]);
-            if ($this->nit != Auth::user()->client->nit) {
-                $viewFiles->updateNit(['nit' => $this->nit, 'nameBack' => $this->user->client->nit]);
-            }
-        }
+
     }
 }

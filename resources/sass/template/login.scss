@@ -1,8 +1,9 @@
-.password{
-            background: url("../images/home.png");
-            background-size: cover;
+.password {
+  background: url("../images/home.png");
+  background-size: cover;
 }
-.login {
+
+.login, .register {
   background: url("../images/home.png");
   background-size: cover;
 
@@ -47,6 +48,11 @@
     max-height: 4rem;
   }
 }
-.error-color{
+
+.Form-Register {
+  min-width: 32rem;
+}
+
+.error-color {
   color: var(--error-color)
 }

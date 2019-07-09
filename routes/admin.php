@@ -27,21 +27,27 @@ Route::post('archivos/downloadFile', 'FileController@downloadFile')
 Route::get('usuarios/{client}/subir-archivo', 'ClientController@uploadFile')
     ->middleware('can:isAdmin')->name('client.uploadFile');
 
-Route::get('usuarios/crear/admin','UserController@createAdmin')
+Route::get('usuarios/crear/admin', 'UserController@createAdmin')
     ->middleware('can:isAdmin')->name('users.create.admin');
 
-Route::post('usuarios/crear/admin','UserController@storeAdmin')
+Route::post('usuarios/crear/admin', 'UserController@storeAdmin')
     ->middleware('can:isAdmin')->name('users.store.admin');
 
 Route::get('filter-products', 'FileController@filterProducts')->name('files.filter');
 
 Route::get('perfil', 'UserController@index')->name('profile');
 Route::post('perfil', 'UserController@update')->name('profile.update');
+Route::put('usuarios-Admin/{user}', 'UserController@updateAdmin')
+    ->middleware('can:isAdmin');
 
 Route::resource('categorias', 'CategoryController')
     ->names('category')
     ->parameters(['categorias' => 'category'])
     ->middleware('can:isAdmin');
+
 Route::get('mis-archivos', 'ClientController@filesByClient')->name('filesByClient');
 
 Route::get('archivos', 'FileController@filterFiles')->name('filterFiles');
+Route::get('validar-usuarios', 'UserController@validateUser')->name('validate.user');
+Route::post('validate', 'UserController@validateClient')->name('validate.validate');
+

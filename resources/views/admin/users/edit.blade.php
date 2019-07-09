@@ -56,8 +56,7 @@
                         <input autocomplete="off" type="text" name="nit" id="nit"  value="{{old('nit', $client->nit)}}"
                                placeholder="Número de NIT" class="col-10">
                         <span class="col">-</span>
-                        <input type="text" class="col-5" name="verification_code" style="padding: 0" placeholder="CV"
-                               value="{{old('verification_code', $client->verification_code)}}" >
+
                     </div>
                 </div>
                 <div class="row middle-items m-t-12">

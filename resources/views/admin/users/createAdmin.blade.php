@@ -20,7 +20,8 @@
         @endif
         <div class="row justify-between">
             <h2 class="m-b-28">DATOS USUARIO ADMIN</h2>
-            <div><a href="{{route('users.create')}}" class="button" style="padding: 6px 16px !important;">Crear usuario cliente</a></div>
+            <div><a href="{{route('users.create')}}" class="button" style="padding: 6px 16px !important;">Crear usuario
+                    cliente</a></div>
         </div>
         <form action="{{route('users.store.admin')}}" method="post" class="row Form">
             @csrf
@@ -52,5 +53,8 @@
                 <button type="submit">Crear usuario</button>
             </div>
         </form>
+
+        <h3>LISTADO DE ADMINISTRADORES</h3>
+        <list-admin :admins="{{$admins}}" token="{{csrf_token()}}"></list-admin>
     </div>
 @endsection

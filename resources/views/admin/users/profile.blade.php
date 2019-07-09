@@ -51,7 +51,7 @@
                     <div class="row middle-items m-t-12">
                         <label class="col-6 is-text-center" for="business_name">Razón social</label>
                         <div class="col-10">
-                            <input autocomplete="off" type="text"
+                            <input autocomplete="off" type="text" disabled="disabled"
                                    value="{{old('business_name',$user->client->business_name)}}"
                                    name="business_name" id="business_name"
                                    placeholder="Nombre de la empresa">
@@ -61,18 +61,17 @@
                         <label class="col-6 is-text-center" for="nit">NIT</label>
                         <div class="col-10 row middle-items">
                             <input autocomplete="off" type="text" name="nit" id="nit"
-                                   value="{{old('nit',$user->client->nit)}}"
+                                   value="{{old('nit',$user->client->nit)}}"  disabled="disabled"
                                    placeholder="Número de NIT" class="col-10">
                             <span class="col">-</span>
-                            <input type="text" class="col-5" name="verification_code"
-                                   style="padding: 0" placeholder="CV"
-                                   value="{{old('verification_code',$user->client->verification_code)}}">
+
                         </div>
                     </div>
                     <div class="row middle-items m-t-12">
                         <label class="col-6 is-text-center" for="address">Dirección</label>
                         <div class="col-10">
                             <input autocomplete="off" type="text" value="{{old('address',$user->client->address)}}"
+                                   disabled="disabled"
                                    name="address" id="address" placeholder="Dirección de la empresa">
                         </div>
                     </div>

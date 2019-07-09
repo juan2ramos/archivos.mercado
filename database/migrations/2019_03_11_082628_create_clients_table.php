@@ -18,7 +18,6 @@ class CreateClientsTable extends Migration
 
             $table->string('business_name', 1000);
             $table->string('nit');
-            $table->string('verification_code');
             $table->string('address');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');

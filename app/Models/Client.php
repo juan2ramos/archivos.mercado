@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Client extends Model
 {
-    protected $fillable = ['business_name', 'nit', 'address', 'verification_code'];
+    protected $fillable = ['business_name', 'nit', 'address'];
     protected $appends = ['full_nit'];
 
     protected static function boot()
@@ -19,6 +19,7 @@ class Client extends Model
             $viewFiles = new ViewFiles();
             $viewFiles->removeNit($client->nit);
         });
+
     }
 
     public function getRouteKeyName()
@@ -44,7 +45,7 @@ class Client extends Model
 
     public function getFullNitAttribute()
     {
-        return "{$this->attributes['nit']} - {$this->attributes['verification_code']}";
+        return "{$this->attributes['nit']}";
 
     }
 

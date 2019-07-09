@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\ManageFiles\ViewFiles;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -27,7 +28,9 @@ class UserController extends Controller
 
     public function createAdmin()
     {
-        return view('admin.users.createAdmin');
+        $admins = User::role('SuperAdmin')->get();
+
+        return view('admin.users.createAdmin', compact('admins'));
     }
 
     public function storeAdmin(Request $request)
@@ -41,5 +44,31 @@ class UserController extends Controller
         $user = User::create($data);
         $user->assignRole('SuperAdmin');
         return redirect()->back()->with(['success' => true]);
+    }
+
+    public function updateAdmin(Request $request, User $user)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'email' => ['required', 'email ', Rule::unique('users')->ignore($user)],
+        ]);
+
+        $user->update($validatedData);
+        return $user;
+    }
+
+    public function validateUser()
+    {
+        $users = User::role('Client')->where('validate', 0)->with('client')->get();
+
+        return view('admin.users.validateUsers', compact('users'));
+    }
+
+    public function validateClient(Request $request)
+    {
+        $user = User::find($request->id);
+        $user->update(['validate' => 1]);
+
+        return ['success' => true];
     }
 }

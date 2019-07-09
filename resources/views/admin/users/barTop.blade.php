@@ -1,7 +1,7 @@
 
     <div class="row justify-between-m justify-center BarTop middle-items">
         <div>
-            <a href="{{route('users.create')}}" class="row middle-items BarTop-link">
+            <a href="{{route('users.create.admin')}}" class="row middle-items BarTop-link">
                 <svg width="23px" height="25px" viewBox="0 0 23 25" version="1.1" xmlns="http://www.w3.org/2000/svg"
                      xmlns:xlink="http://www.w3.org/1999/xlink">
                     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -37,4 +37,8 @@
                 </svg>
             </button>
         </form>
+
+    </div>
+    <div class="row justify-end">
+        <a href="{{route('validate.user')}}" style="color: #37542f; padding: 10px 0; text-decoration: underline">Validar usuarios</a>
     </div>

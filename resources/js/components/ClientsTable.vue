@@ -89,7 +89,7 @@
             methods: {
             alert: function (nit, index) {
                 swal({
-                    title: "Estas seguro ?",
+                    title: "¿Estás seguro de eliminar al usuario?",
                     text: "Recuerda que se ya no prodrás recuper la información.",
                     icon: "warning",
                     buttons: true,

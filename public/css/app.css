@@ -3305,12 +3305,14 @@ tr:nth-child(2n) {
   background-size: cover;
 }
 
-.login {
+.login,
+.register {
   background: url(/images/home.png?0331db2846320a4e683be73a8a99f4df);
   background-size: cover;
 }
 
-.login-content {
+.login-content,
+.register-content {
   height: 100vh;
   max-width: 96%;
   margin: 0 auto;
@@ -3318,40 +3320,50 @@ tr:nth-child(2n) {
 }
 
 @media (min-width: 720px) {
-  .login-content {
+  .login-content,
+  .register-content {
     margin: 0 0 0 10rem;
     max-width: 36rem;
   }
 }
 
 @media (min-width: 720px) {
-  .login-logo {
+  .login-logo,
+  .register-logo {
     display: none;
   }
 }
 
-.login input {
+.login input,
+.register input {
   border: none !important;
   border-radius: 0.4rem;
   margin: 1rem 0;
 }
 
-.login p {
+.login p,
+.register p {
   color: white;
   line-height: 2rem;
   font-weight: 100;
 }
 
-.login p.error {
+.login p.error,
+.register p.error {
   color: var(--error-color);
 }
 
-.login button {
+.login button,
+.register button {
   background: var(--secondary-color);
   color: black;
   font-weight: 700;
   border-radius: 0.4rem;
   max-height: 4rem;
+}
+
+.Form-Register {
+  min-width: 32rem;
 }
 
 .error-color {

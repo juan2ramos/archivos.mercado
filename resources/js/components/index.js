@@ -4,6 +4,8 @@ import NewFile from './NewFile';
 import UploadFile from './UploadFile';
 import CategoriesTable from './CategoriesTable';
 import FilesAll from './FilesAll';
+import ListAdmin from './ListAdmin';
+import ValidateUsers from './ValidateUsers';
 
 export default [
     ClientsTable,
@@ -11,5 +13,7 @@ export default [
     NewFile,
     UploadFile,
     CategoriesTable,
-    FilesAll
+    FilesAll,
+    ListAdmin,
+    ValidateUsers
 ];

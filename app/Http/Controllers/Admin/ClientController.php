@@ -72,8 +72,9 @@ class ClientController extends Controller
         if (Gate::denies('isAdmin')) {
             abort(404);
         }
+        $user = $client->user();
         $client->delete();
-
+        $user->delete();
         return ['success' => true];
     }
 
