@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Http\Controllers\Controller;
+use App\Mail\UserWasAccepted;
 use App\ManageFiles\ViewFiles;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller
@@ -68,7 +70,7 @@ class UserController extends Controller
     {
         $user = User::find($request->id);
         $user->update(['validate' => 1]);
-
+        Mail::to($user)->queue(new UserWasAccepted());;
         return ['success' => true];
     }
 }

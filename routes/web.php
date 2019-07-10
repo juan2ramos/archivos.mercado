@@ -11,6 +11,8 @@
 |
 */
 
+use App\Events\UserWasCreated;
+
 Route::get('/', 'HomeController@index');
 
 Auth::routes();
@@ -18,3 +20,8 @@ Auth::routes();
 Route::get('home', 'Admin\HomeController@toValidate')->name('toValidate');
 
 Route::get('cerrar-sesion', 'Auth\LoginController@logout')->name('logout');
+
+Route::get('event', function () {
+
+    return new \App\Mail\UserRegister(\App\User::find(1));
+});

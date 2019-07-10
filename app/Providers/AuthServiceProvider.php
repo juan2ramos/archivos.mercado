@@ -29,5 +29,6 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('isAdmin', 'App\Policies\UserPolicy@isAdmin');
         Gate::define('authorizedClient', 'App\Policies\UserPolicy@authorizedClient');
+        Gate::define('file', 'App\Policies\FilePolicy@canSee');
     }
 }

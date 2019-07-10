@@ -9189,7 +9189,10 @@ var render = function() {
                       "a",
                       {
                         staticClass: "m-r-20",
-                        attrs: { target: "_blank", href: file.path }
+                        attrs: {
+                          target: "_blank",
+                          href: "/admin/archivos/visualizar/" + file.id
+                        }
                       },
                       [
                         _c(

@@ -62,7 +62,7 @@
                                 </g>
                             </svg>
                         </a>
-                        <a class="m-r-20" target="_blank" :href="file.path" v-else>
+                        <a class="m-r-20" target="_blank" :href="`/admin/archivos/visualizar/${file.id}`" v-else>
                             <svg width="20px" height="26px" viewBox="0 0 20 26" version="1.1"
                                  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

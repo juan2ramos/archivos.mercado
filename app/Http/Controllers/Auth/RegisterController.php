@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\UserWasCreated;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -47,6 +48,8 @@ class RegisterController extends Controller
                 'address' => $data['address'],
             ]);
             Storage::makeDirectory("mercado/" . $data['nit']);
+
+            UserWasCreated::dispatch($user);
 
             return $user;
         });

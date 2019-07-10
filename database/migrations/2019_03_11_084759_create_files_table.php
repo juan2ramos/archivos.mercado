@@ -23,6 +23,7 @@ class CreateFilesTable extends Migration
             $table->string('mime');
             $table->string('directory');
             $table->string('extension');
+            $table->boolean('viewed')->default(0);
 
             $table->unsignedBigInteger('client_id');
             $table->foreign('client_id')->references('id')->on('clients');

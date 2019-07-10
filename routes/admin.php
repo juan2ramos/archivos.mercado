@@ -51,3 +51,5 @@ Route::get('archivos', 'FileController@filterFiles')->name('filterFiles');
 Route::get('validar-usuarios', 'UserController@validateUser')->name('validate.user');
 Route::post('validate', 'UserController@validateClient')->name('validate.validate');
 
+Route::get('archivos/visualizar/{file}', 'FileController@download')->name('download');
+

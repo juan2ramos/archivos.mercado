@@ -134,7 +134,11 @@
                 </figure>
                 <h1 class="is-text-center h-1">REGÍSTRATE</h1>
                 @if ($errors->any())
-                    {{$errors}}
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li class="is-invalid">{{ $error }}</li>
+                        @endforeach
+                    </ul>
 
                     <p class="error">¡Los datos ingresados no son correctos!</p>
                 @endif
