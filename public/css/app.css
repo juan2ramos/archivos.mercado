@@ -3077,6 +3077,11 @@ tr:nth-child(2n) {
   background: #f7fbf9;
 }
 
+select option {
+  background: white;
+  color: #000;
+}
+
 .Loading {
   position: fixed;
   z-index: 1;
@@ -3490,6 +3495,10 @@ tr:nth-child(2n) {
 
 .FormEdit-link.cancel {
   background: #be2626;
+}
+
+input[type=month] {
+  padding: 9px !important;
 }
 
 @-webkit-keyframes passing-through {

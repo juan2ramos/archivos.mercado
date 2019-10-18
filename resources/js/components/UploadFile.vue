@@ -10,32 +10,15 @@
                     </select>
                 </div>
             </div>
+        </div>
+        <div class="col-m-8 col-16 p-l-12">
+
             <div class="row middle-items m-t-12">
                 <label class="col-6 is-text-center" for="directory">Carpeta</label>
                 <div class="col-10">
                     <select name="directory" id="directory">
                         <option value="">Seleccione una carpeta</option>
                         <option v-for="directory in directories" :value="directory">{{directory}}</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="col-m-8 col-16 p-l-12">
-            <div class="row middle-items m-t-12">
-                <label class="col-6 is-text-center" for="months">Mes</label>
-                <div class="col-10">
-                    <select name="month" id="months">
-                        <option value="">Seleccione el mes</option>
-                        <option v-for="month in months" :value="month">{{month}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row middle-items m-t-12">
-                <label class="col-6 is-text-center" for="year">Año</label>
-                <div class="col-10">
-                    <select name="year" id="year">
-                        <option value="">Seleccione el año</option>
-                        <option v-for="year in years" :value="year">{{year}}</option>
                     </select>
                 </div>
             </div>

@@ -11,17 +11,8 @@
                         <option v-for="category in categories" :value="category.id">{{category.name}}</option>
                     </select>
                 </label>
-                <label for="" class="col-m-2 col-16  m-r-8">
-                    <select name="year" id="year" v-model="year">
-                        <option value="">Por año</option>
-                        <option v-for="year in years" :value="year">{{year}}</option>
-                    </select>
-                </label>
-                <label for="" class="col-m-3 col-16 m-r-8">
-                    <select name="month" id="months" v-model="month">
-                        <option value="">Por mes</option>
-                        <option v-for="month in months" :value="month">{{month}}</option>
-                    </select>
+                <label for="" class="col-m-4 col-16  m-r-8">
+                    <input type="month" v-model="date">
                 </label>
                 <button style="min-width: 14.2rem; border-radius: 4px;" :disabled="disabled" type="submit">Filtrar
                 </button>
@@ -51,7 +42,7 @@
                     </td>
                     <td>{{file.category.name}}</td>
                     <td>{{file.client.nit}}</td>
-                    <td>{{`${file.month} - ${file.year}`}}</td>
+                    <td>{{file.created_at}}</td>
                     <td class="row justify-center">
                         <a target="_blank" :href="file.path">
                             <svg width="20px" height="26px" viewBox="0 0 20 26" version="1.1"
@@ -91,7 +82,6 @@
     import {getYears, getMounths} from '../Services/dates';
     import ajax from 'axios';
     import isSearchQuery from '../Services/getQueryVariable';
-
     export default {
         props: ['categories', 'getFiles', 'getSearch'],
         name: "FilesAll",
@@ -100,12 +90,11 @@
                 years: getYears(),
                 months: getMounths(),
                 category: '',
-                year: '',
-                month: '',
                 search: (this.getSearch) ? this.getSearch : '',
                 files: (this.getFiles) ? this.getFiles : {},
                 disabled: false,
                 isSearch: isSearchQuery('search'),
+                date: ''
             }
         },
         methods: {
@@ -123,8 +112,7 @@
                     params: {
                         'search': this.search,
                         'category': this.category,
-                        'year': this.year,
-                        'month': this.month,
+                        'date': this.date,
                     }
                 }).then((response) => {
                     this.disabled = false;

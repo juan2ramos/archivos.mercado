@@ -20,10 +20,11 @@ class File extends Model
     public function scopeSearch($query, $search)
     {
         $query = $query->where('name', 'like', '%' . $search->get('search') . '%');
-        if ($search->get('year'))
-            $query->where('year', $search->get('year'));
-        if ($search->get('month'))
-            $query->where('month', $search->get('month'));
+        if ($search->get('date')) {
+            $m = explode("-", $search->get('date'));
+            $query->whereMonth('created_at', '=', $m[1]);
+        }
+
         if ($search->get('category'))
             $query->whereHas('category', function ($query) use ($search) {
                 $query->where('id', $search->get('category'));

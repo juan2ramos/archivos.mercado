@@ -10,7 +10,6 @@ use App\Models\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
@@ -35,6 +34,7 @@ class FileController extends Controller
     public function store(CreateFileRequest $request)
     {
         $request->createFile();
+
         return back()->with(['success' => true]);
     }
 

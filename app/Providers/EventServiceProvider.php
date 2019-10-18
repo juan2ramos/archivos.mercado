@@ -22,6 +22,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\ViewedFile' => [
             'App\Listeners\SendViewedFileAdmin',
         ],
+        'App\Events\NewFile' => [
+            'App\Listeners\SendNewFile',
+        ],
     ];
 
     /**

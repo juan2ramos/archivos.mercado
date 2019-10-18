@@ -2197,15 +2197,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -2217,12 +2208,11 @@ __webpack_require__.r(__webpack_exports__);
       years: Object(_Services_dates__WEBPACK_IMPORTED_MODULE_0__["getYears"])(),
       months: Object(_Services_dates__WEBPACK_IMPORTED_MODULE_0__["getMounths"])(),
       category: '',
-      year: '',
-      month: '',
       search: this.getSearch ? this.getSearch : '',
       files: this.getFiles ? this.getFiles : {},
       disabled: false,
-      isSearch: Object(_Services_getQueryVariable__WEBPACK_IMPORTED_MODULE_2__["default"])('search')
+      isSearch: Object(_Services_getQueryVariable__WEBPACK_IMPORTED_MODULE_2__["default"])('search'),
+      date: ''
     };
   },
   methods: {
@@ -2240,8 +2230,7 @@ __webpack_require__.r(__webpack_exports__);
         params: {
           'search': this.search,
           'category': this.category,
-          'year': this.year,
-          'month': this.month
+          'date': this.date
         }
       }).then(function (response) {
         _this.disabled = false;
@@ -2854,23 +2843,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -3099,7 +3071,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".Crumbs a[data-v-18d38cc2] {\n  color: #FAA41B !important;\n  text-decoration: underline;\n}", ""]);
+exports.push([module.i, "\n.Crumbs a[data-v-18d38cc2] {\n  color: #FAA41B !important;\n  text-decoration: underline;\n}", ""]);
 
 // exports
 
@@ -8640,93 +8612,28 @@ var render = function() {
             _vm._v(" "),
             _c(
               "label",
-              { staticClass: "col-m-2 col-16  m-r-8", attrs: { for: "" } },
+              { staticClass: "col-m-4 col-16  m-r-8", attrs: { for: "" } },
               [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.year,
-                        expression: "year"
-                      }
-                    ],
-                    attrs: { name: "year", id: "year" },
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.year = $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      }
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.date,
+                      expression: "date"
                     }
-                  },
-                  [
-                    _c("option", { attrs: { value: "" } }, [_vm._v("Por año")]),
-                    _vm._v(" "),
-                    _vm._l(_vm.years, function(year) {
-                      return _c("option", { domProps: { value: year } }, [
-                        _vm._v(_vm._s(year))
-                      ])
-                    })
                   ],
-                  2
-                )
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "label",
-              { staticClass: "col-m-3 col-16 m-r-8", attrs: { for: "" } },
-              [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.month,
-                        expression: "month"
+                  attrs: { type: "month" },
+                  domProps: { value: _vm.date },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
                       }
-                    ],
-                    attrs: { name: "month", id: "months" },
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.month = $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      }
+                      _vm.date = $event.target.value
                     }
-                  },
-                  [
-                    _c("option", { attrs: { value: "" } }, [_vm._v("Por mes")]),
-                    _vm._v(" "),
-                    _vm._l(_vm.months, function(month) {
-                      return _c("option", { domProps: { value: month } }, [
-                        _vm._v(_vm._s(month))
-                      ])
-                    })
-                  ],
-                  2
-                )
+                  }
+                })
               ]
             ),
             _vm._v(" "),
@@ -8767,7 +8674,7 @@ var render = function() {
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(file.client.nit))]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(file.month + " - " + file.year))]),
+                  _c("td", [_vm._v(_vm._s(file.created_at))]),
                   _vm._v(" "),
                   _c("td", { staticClass: "row justify-center" }, [
                     _c("a", { attrs: { target: "_blank", href: file.path } }, [
@@ -10078,8 +9985,10 @@ var render = function() {
               2
             )
           ])
-        ]),
-        _vm._v(" "),
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-m-8 col-16 p-l-12" }, [
         _c("div", { staticClass: "row middle-items m-t-12" }, [
           _c(
             "label",
@@ -10102,62 +10011,6 @@ var render = function() {
                 _vm._l(_vm.directories, function(directory) {
                   return _c("option", { domProps: { value: directory } }, [
                     _vm._v(_vm._s(directory))
-                  ])
-                })
-              ],
-              2
-            )
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-m-8 col-16 p-l-12" }, [
-        _c("div", { staticClass: "row middle-items m-t-12" }, [
-          _c(
-            "label",
-            { staticClass: "col-6 is-text-center", attrs: { for: "months" } },
-            [_vm._v("Mes")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-10" }, [
-            _c(
-              "select",
-              { attrs: { name: "month", id: "months" } },
-              [
-                _c("option", { attrs: { value: "" } }, [
-                  _vm._v("Seleccione el mes")
-                ]),
-                _vm._v(" "),
-                _vm._l(_vm.months, function(month) {
-                  return _c("option", { domProps: { value: month } }, [
-                    _vm._v(_vm._s(month))
-                  ])
-                })
-              ],
-              2
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "row middle-items m-t-12" }, [
-          _c(
-            "label",
-            { staticClass: "col-6 is-text-center", attrs: { for: "year" } },
-            [_vm._v("Año")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-10" }, [
-            _c(
-              "select",
-              { attrs: { name: "year", id: "year" } },
-              [
-                _c("option", { attrs: { value: "" } }, [
-                  _vm._v("Seleccione el año")
-                ]),
-                _vm._v(" "),
-                _vm._l(_vm.years, function(year) {
-                  return _c("option", { domProps: { value: year } }, [
-                    _vm._v(_vm._s(year))
                   ])
                 })
               ],

@@ -17,8 +17,6 @@ class CreateFilesTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name');
-            $table->string('year');
-            $table->string('month');
             $table->string('path');
             $table->string('mime');
             $table->string('directory');

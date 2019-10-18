@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Events\NewFile;
 use App\Models\Client;
 use App\Models\File;
 use Illuminate\Foundation\Http\FormRequest;
@@ -31,8 +32,6 @@ class CreateFileRequest extends FormRequest
         return [
             'category_id' => 'required',
             'directory' => 'required',
-            'month' => 'required',
-            'year' => 'required',
             'path' => 'required',
         ];
     }
@@ -61,6 +60,8 @@ class CreateFileRequest extends FormRequest
             $file = new File($data);
 
             $client->files()->save($file);
+            NewFile::dispatch($client->user, $file);
+
         });
     }
 }
