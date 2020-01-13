@@ -30,7 +30,7 @@ class NewFile extends Mailable
     {
         $this->url = route('home');
         return $this
-            ->subject('Se ha subido un nuevo archivo en Mercado y Bolsa')
+            ->subject('Se ha subido un nuevo archivo en Mercado y Bolsa S.A.')
             ->markdown('emails.NewFile');
 
     }
