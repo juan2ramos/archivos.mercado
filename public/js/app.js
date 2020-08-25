@@ -8887,7 +8887,7 @@ var render = function() {
         _c(
           "tbody",
           _vm._l(_vm.filesLocal, function(file, index) {
-            return _c("tr", [
+            return _c("tr", { key: index }, [
               _c("td", [
                 _c("div", { staticClass: "row middle-items" }, [
                   _c("img", {
@@ -23261,8 +23261,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/juanramos/Sites/archivos.myb/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /Users/juanramos/Sites/archivos.myb/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /Users/juanramos/Projects/archivos.myb/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /Users/juanramos/Projects/archivos.myb/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

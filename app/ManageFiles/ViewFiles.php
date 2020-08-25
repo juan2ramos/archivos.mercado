@@ -47,12 +47,16 @@ class ViewFiles
         $files = File::where('directory', $this->getPath())->get();
 
         $files = $files->map(function ($item) {
+            $date = [
+                'month' => $item->month ? $item->month : $item->created_at->format('m'),
+                'year' => $item->year ? $item->year : $item->created_at->format('Y')
+            ];
             return [
                 'id' => $item->id,
                 'name' => $item->name,
                 'path' => $item->path,
                 'type' => $item->extension,
-                'date' => $item->month . ' ' . $item->year,
+                'date' => $item->created_at->format('Y-m-d h:m:s'),
                 'category' => $item->category->name,
             ];
         });

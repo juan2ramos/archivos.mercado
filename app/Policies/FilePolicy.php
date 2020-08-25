@@ -11,6 +11,6 @@ class FilePolicy
 
     function canSee(User $user, $file)
     {
-        return $user->client->id === $file->client_id;
+        return $user->isAdmin() ? true : $user->client->id === $file->client_id;
     }
 }

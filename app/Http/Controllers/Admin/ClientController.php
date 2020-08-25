@@ -48,6 +48,7 @@ class ClientController extends Controller
         }
 
         $files = $viewFiles->clientFiles($client);
+        
         if (request()->isJson()) {
             return $files;
         }

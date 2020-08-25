@@ -20,7 +20,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(file, index)  in filesLocal">
+                <tr v-for="(file, index)  in filesLocal" :key="index">
                     <td>
                         <div class="row middle-items">
                             <img class="m-r-20"
